@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大阪府公立高校入試制度 - インタラクティブガイド 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutral with Teal Accent (bg-slate-100, white, teal-600, gray-700) -->
+    <!-- Application Structure Plan: A dashboard-style SPA with a top navigation bar. The structure prioritizes user interaction and understanding over the linear format of the source report. Key sections include an overview, an interactive "Pass/Fail Mechanism" simulator, an interactive "School Report" calculator, and clear sections for the academic test and schedule. This design allows users (students/parents) to quickly access information relevant to them and simulate personal scenarios, which is the most effective way to understand the complex exam system. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: Academic Test vs. School Report Ratios. -> Goal: Compare/Explore. -> Viz: Interactive buttons + dynamic Chart.js Doughnut Chart. -> Interaction: User clicks a ratio type button, chart and explanation text update instantly. -> Justification: Far more engaging and intuitive than a static table. It allows users to "feel" the difference in weighting. -> Library: Chart.js (Canvas).
+        - Report Info: Naishinten (School Report) calculation with 3rd-year weighting. -> Goal: Understand/Personalize. -> Viz: Interactive input fields + dynamic Chart.js Bar Chart. -> Interaction: User inputs hypothetical grades, a bar chart visually shows the contribution of each year to the total score. -> Justification: Visually demonstrates the critical importance of 3rd-year grades, which is a key takeaway from the report. -> Library: Chart.js (Canvas).
+        - Report Info: Border Zone selection process. -> Goal: Organize/Understand. -> Viz: Static HTML/CSS diagram. -> Interaction: None. -> Justification: A static flowchart is the clearest way to represent this sequential process without unnecessary complexity. -> Library/Method: HTML/Tailwind.
+        - Report Info: Exam Schedule. -> Goal: Inform. -> Viz: Clean HTML table. -> Interaction: None. -> Justification: A table is the standard and most readable format for chronological data. -> Library/Method: HTML/Tailwind.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s;
+        }
+        .nav-link:hover {
+            color: #0d9488; /* teal-600 */
+            transform: translateY(-2px);
+        }
+        .tab-button.active {
+            background-color: #0d9488; /* teal-600 */
+            color: white;
+            border-color: #0d9488;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-xl font-bold text-teal-700">大阪府公立高校入試ガイド</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">概要</a>
+                        <a href="#mechanism" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">合否の仕組み</a>
+                        <a href="#naishin" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">内申点</a>
+                        <a href="#test" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">学力検査</a>
+                        <a href="#schedule" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">日程</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">令和7年度 大阪府公立高校入試制度</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">複雑な入試制度を、インタラクティブなツールで分かりやすく解説します。自分だけのシナリオで合格の仕組みをシミュレーションしてみましょう。</p>
+        </section>
+
+        <section id="overview" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-10">入試の全体像</h2>
+            <div class="grid md:grid-cols-2 gap-8 text-center">
+                <div class="bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-2xl font-bold mb-3 text-teal-700">特別入学者選抜</h3>
+                    <p class="text-gray-600">専門学科や総合学科（エンパワメントスクール）などで実施。学力検査に加え、<span class="font-bold">実技検査</span>や<span class="font-bold">面接</span>が課されます。</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-2xl font-bold mb-3 text-teal-700">一般入学者選抜</h3>
+                    <p class="text-gray-600">普通科や文理学科など、多くの学科で実施。主に<span class="font-bold">学力検査</span>と<span class="font-bold">調査書（内申点）</span>で合否が判定されます。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mechanism" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">合否の仕組みを探る</h2>
+            <p class="text-center text-gray-600 mb-10">学力検査と内申点、どちらがどれだけ重視される？比率タイプを選んで、重み付けをグラフで視覚的に確認しましょう。</p>
+            
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">① 比率タイプを選択</h3>
+                        <div id="ratio-buttons" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3 mb-6">
+                            <button data-ratio="I" class="ratio-btn active bg-teal-600 text-white p-3 rounded-lg font-semibold transition">Ⅰ型 (7:3)</button>
+                            <button data-ratio="II" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅱ型 (6:4)</button>
+                            <button data-ratio="III" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅲ型 (5:5)</button>
+                            <button data-ratio="IV" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅳ型 (4:6)</button>
+                            <button data-ratio="V" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅴ型 (3:7)</button>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">② 解説</h3>
+                        <div id="ratio-explanation" class="bg-slate-100 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg text-teal-800 mb-1">Ⅰ型 (7:3)</h4>
+                            <p class="text-gray-700">学力検査の比率が<span class="font-bold">7割</span>、調査書（内申点）の比率が<span class="font-bold">3割</span>です。当日の学力検査の結果が非常に重視されるタイプです。</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ratioChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="naishin" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">内申点シミュレーター</h2>
+            <p class="text-center text-gray-600 mb-10">中学3年間の成績がどのように評価されるか計算してみましょう。特に3年生の成績の重要性が一目でわかります。</p>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                         <h3 class="text-xl font-bold mb-4">① 各学年の9教科の平均評定を入力</h3>
+                         <div id="naishin-inputs" class="space-y-4">
+                            <div>
+                                <label for="y1" class="font-medium">中学1年生 (x2倍)</label>
+                                <input type="number" id="y1" min="1" max="5" step="0.1" value="3.5" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <label for="y2" class="font-medium">中学2年生 (x2倍)</label>
+                                <input type="number" id="y2" min="1" max="5" step="0.1" value="3.5" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                            </div>
+                             <div>
+                                <label for="y3" class="font-medium text-red-600">中学3年生 (x6倍)</label>
+                                <input type="number" id="y3" min="1" max="5" step="0.1" value="4.0" class="w-full mt-1 p-2 border border-gray-300 rounded-md ring-2 ring-red-200">
+                            </div>
+                         </div>
+                         <div class="mt-6 text-center bg-teal-50 p-4 rounded-lg">
+                             <p class="text-lg font-medium text-gray-700">あなたの一般選抜での内申点（推定）:</p>
+                             <p id="naishin-score" class="text-4xl font-bold text-teal-700">333 / 450点</p>
+                         </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="naishinChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="test" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-10">学力検査のポイント</h2>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <div class="flex justify-center mb-6 border-b">
+                    <button id="tab-main" class="tab-button active py-2 px-6 font-medium border-b-2">国語・数学・英語</button>
+                    <button id="tab-sub" class="tab-button py-2 px-6 font-medium border-b-2 border-transparent text-gray-500">理科・社会</button>
+                    <button id="tab-eiken" class="tab-button py-2 px-6 font-medium border-b-2 border-transparent text-gray-500">英語外部検定</button>
+                </div>
+                <div id="tab-content-main">
+                    <h3 class="text-xl font-bold text-center mb-6">難易度が選べる3教科</h3>
+                    <div class="grid sm:grid-cols-3 gap-6">
+                        <div class="bg-slate-100 p-4 rounded-lg text-center">
+                            <h4 class="font-bold text-lg">A問題 (基礎)</h4>
+                            <p class="text-sm text-gray-600">基礎的な内容の理解を問います。</p>
+                        </div>
+                        <div class="bg-slate-100 p-4 rounded-lg text-center">
+                            <h4 class="font-bold text-lg">B問題 (標準)</h4>
+                            <p class="text-sm text-gray-600">標準的な内容の理解を問います。</p>
+                        </div>
+                         <div class="bg-slate-100 p-4 rounded-lg text-center">
+                            <h4 class="font-bold text-lg">C問題 (発展)</h4>
+                            <p class="text-sm text-gray-600">応用力、思考力、表現力を問います。</p>
+                        </div>
+                    </div>
+                     <p class="mt-6 text-sm text-center text-gray-500">※高校・学科によって採用する問題のタイプが異なります。志望校の情報を必ず確認してください。</p>
+                </div>
+                <div id="tab-content-sub" class="hidden">
+                     <h3 class="text-xl font-bold text-center mb-6">共通問題で実施される2教科</h3>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="bg-slate-100 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg">理科</h4>
+                            <p class="text-sm text-gray-600">生物・物理・化学・地学の4分野から大問形式で出題。実験図の読解や計算問題が重要です。</p>
+                        </div>
+                        <div class="bg-slate-100 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg">社会</h4>
+                            <p class="text-sm text-gray-600">地理・歴史・公民の複合問題が多く、資料読解力や記述力が求められます。時事問題も出題されます。</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-content-eiken" class="hidden">
+                    <h3 class="text-xl font-bold text-center mb-6">英語外部検定の活用</h3>
+                    <p class="text-center text-sm text-gray-600 mb-4">英検®などのスコアを、当日の英語の学力検査の点数に読み替えることができます。読み替え点数と当日点数のうち、高い方が採用されます。</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border">
+                            <thead class="bg-teal-600 text-white">
+                                <tr>
+                                    <th class="py-2 px-4 text-left">検定種類</th>
+                                    <th class="py-2 px-4 text-left">級/スコア</th>
+                                    <th class="py-2 px-4 text-left">読み替え率</th>
+                                    <th class="py-2 px-4 text-left">換算点 (90点満点)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700">
+                                <tr class="border-b">
+                                    <td class="py-2 px-4 font-medium" rowspan="2">実用英語技能検定 (英検®)</td>
+                                    <td class="py-2 px-4">準1級・1級</td>
+                                    <td class="py-2 px-4">100%</td>
+                                    <td class="py-2 px-4 font-bold">90点</td>
+                                </tr>
+                                <tr class="border-b bg-slate-50">
+                                    <td class="py-2 px-4">2級</td>
+                                    <td class="py-2 px-4">80%</td>
+                                    <td class="py-2 px-4 font-bold">72点</td>
+                                </tr>
+                                <tr class="border-b">
+                                     <td class="py-2 px-4 font-medium">TOEFL iBT®</td>
+                                     <td class="py-2 px-4">（スコアによる）</td>
+                                     <td class="py-2 px-4">100% / 80%</td>
+                                     <td class="py-2 px-4">90点 / 72点</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                     <p class="mt-4 text-xs text-center text-gray-500">※上記は一例です。詳細は必ず大阪府教育委員会の発表を確認してください。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-10">令和7年度 入試日程</h2>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="border-b-2 border-gray-200">
+                        <tr>
+                            <th class="py-3 px-4 font-bold">選抜方式</th>
+                            <th class="py-3 px-4 font-bold">出願期間</th>
+                            <th class="py-3 px-4 font-bold">検査日</th>
+                            <th class="py-3 px-4 font-bold">合格発表日</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="py-4 px-4 font-medium text-teal-700">特別入学者選抜</td>
+                            <td class="py-4 px-4">2/14(金)～17(月)</td>
+                            <td class="py-4 px-4">2/20(木)・21(金)</td>
+                            <td class="py-4 px-4">3/3(月)</td>
+                        </tr>
+                         <tr class="bg-slate-50 border-b">
+                            <td class="py-4 px-4 font-medium text-teal-700">一般入学者選抜</td>
+                            <td class="py-4 px-4">3/5(水)～7(金)</td>
+                            <td class="py-4 px-4">3/12(水)</td>
+                            <td class="py-4 px-4">3/21(金)</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-4 font-medium text-teal-700">二次試験</td>
+                            <td class="py-4 px-4">3/25(火)</td>
+                            <td class="py-4 px-4">3/26(水) (面接)</td>
+                            <td class="py-4 px-4">3/27(木)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                 <p class="mt-4 text-xs text-center text-gray-500">※音楽科など一部学科は日程が異なります。詳細は必ず大阪府教育委員会の発表を確認してください。</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; 2024 大阪府公立高校入試ガイド. All rights reserved.</p>
+            <p class="text-gray-400 mt-1">このサイトは情報提供を目的としており、最新かつ正確な情報は大阪府教育委員会の公式サイトでご確認ください。</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ratioData = {
+                'I': { values: [7, 3], label: 'Ⅰ型 (7:3)', text: '学力検査の比率が<span class="font-bold">7割</span>、調査書（内申点）の比率が<span class="font-bold">3割</span>です。当日の学力検査の結果が非常に重視されるタイプです。' },
+                'II': { values: [6, 4], label: 'Ⅱ型 (6:4)', text: '学力検査の比率が<span class="font-bold">6割</span>、調査書（内申点）の比率が<span class="font-bold">4割</span>です。学力検査がやや重視されます。' },
+                'III': { values: [5, 5], label: 'Ⅲ型 (5:5)', text: '学力検査の比率が<span class="font-bold">5割</span>、調査書（内申点）の比率が<span class="font-bold">5割</span>です。学力と内申点が均等に評価されます。' },
+                'IV': { values: [4, 6], label: 'Ⅳ型 (4:6)', text: '学力検査の比率が<span class="font-bold">4割</span>、調査書（内申点）の比率が<span class="font-bold">6割</span>です。日頃の学習成果がやや重視されます。' },
+                'V': { values: [3, 7], label: 'Ⅴ型 (3:7)', text: '学力検査の比率が<span class="font-bold">3割</span>、調査書（内申点）の比率が<span class="font-bold">7割</span>です。調査書（内申点）が非常に重視されるタイプです。' },
+            };
+
+            let ratioChart, naishinChart;
+
+            function createRatioChart(ratioType) {
+                const ctx = document.getElementById('ratioChart').getContext('2d');
+                if (ratioChart) {
+                    ratioChart.destroy();
+                }
+                ratioChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['学力検査', '調査書(内申点)'],
+                        datasets: [{
+                            data: ratioData[ratioType].values,
+                            backgroundColor: ['#0d9488', '#9ca3af'],
+                            borderColor: '#ffffff',
+                            borderWidth: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed * 10 + '%';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createNaishinChart(scores) {
+                const ctx = document.getElementById('naishinChart').getContext('2d');
+                if (naishinChart) {
+                    naishinChart.destroy();
+                }
+                naishinChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['中学1年', '中学2年', '中学3年'],
+                        datasets: [{
+                            label: '内申点への貢献度',
+                            data: scores,
+                            backgroundColor: ['#9ca3af', '#9ca3af', '#ef4444'],
+                            borderRadius: 6,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                         scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 300
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                             tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.raw}点`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            const ratioButtons = document.querySelectorAll('.ratio-btn');
+            const ratioExplanation = document.getElementById('ratio-explanation');
+            ratioButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const ratioType = button.dataset.ratio;
+                    createRatioChart(ratioType);
+                    
+                    const explanationData = ratioData[ratioType];
+                    ratioExplanation.innerHTML = `
+                        <h4 class="font-bold text-lg text-teal-800 mb-1">${explanationData.label}</h4>
+                        <p class="text-gray-700">${explanationData.text}</p>
+                    `;
+                    
+                    ratioButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-teal-600', 'text-white');
+                        btn.classList.add('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
+                    });
+                    button.classList.add('active', 'bg-teal-600', 'text-white');
+                    button.classList.remove('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
+                });
+            });
+
+            const naishinInputs = document.querySelectorAll('#naishin-inputs input');
+            const naishinScoreEl = document.getElementById('naishin-score');
+            
+            function calculateNaishin() {
+                const y1 = parseFloat(document.getElementById('y1').value) || 0;
+                const y2 = parseFloat(document.getElementById('y2').value) || 0;
+                const y3 = parseFloat(document.getElementById('y3').value) || 0;
+
+                const score1 = y1 * 9 * 2;
+                const score2 = y2 * 9 * 2;
+                const score3 = y3 * 9 * 6;
+                const totalScore = score1 + score2 + score3;
+                
+                naishinScoreEl.textContent = `${Math.round(totalScore)} / 450点`;
+                createNaishinChart([Math.round(score1), Math.round(score2), Math.round(score3)]);
+            }
+
+            naishinInputs.forEach(input => {
+                input.addEventListener('input', calculateNaishin);
+            });
+
+
+            const tabButtons = {
+                main: document.getElementById('tab-main'),
+                sub: document.getElementById('tab-sub'),
+                eiken: document.getElementById('tab-eiken'),
+            };
+
+            const tabContents = {
+                main: document.getElementById('tab-content-main'),
+                sub: document.getElementById('tab-content-sub'),
+                eiken: document.getElementById('tab-content-eiken'),
+            };
+
+            function switchTab(tabName) {
+                Object.values(tabButtons).forEach(btn => btn.classList.remove('active'));
+                Object.values(tabContents).forEach(content => content.classList.add('hidden'));
+
+                tabButtons[tabName].classList.add('active');
+                tabContents[tabName].classList.remove('hidden');
+            }
+            
+            tabButtons.main.addEventListener('click', () => switchTab('main'));
+            tabButtons.sub.addEventListener('click', () => switchTab('sub'));
+            tabButtons.eiken.addEventListener('click', () => switchTab('eiken'));
+
+
+            createRatioChart('I');
+            calculateNaishin();
+        });
+    </script>
+</body>
+</html>
