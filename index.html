@@ -10,14 +10,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Calm Neutral with Teal Accent (bg-slate-100, white, teal-600, gray-700) -->
-    <!-- Application Structure Plan: A dashboard-style SPA with a top navigation bar. The structure prioritizes user interaction and understanding over the linear format of the source report. Key sections include an overview, an interactive "Pass/Fail Mechanism" simulator, an interactive "School Report" calculator, and clear sections for the academic test and schedule. This design allows users (students/parents) to quickly access information relevant to them and simulate personal scenarios, which is the most effective way to understand the complex exam system. -->
+    <!-- Application Structure Plan: A dashboard-style SPA with a top navigation bar. The structure prioritizes user interaction and understanding over the linear format of the source report. Key sections include an overview, an interactive "School Details" section, an interactive "Pass/Fail Mechanism" simulator, an interactive "School Report" calculator, and clear sections for the academic test and schedule. This design allows users (students/parents) to quickly access information relevant to them and simulate personal scenarios, which is the most effective way to understand the complex exam system. -->
     <!-- Visualization & Content Choices:
-        - Report Info: Academic Test vs. School Report Ratios. -> Goal: Compare/Explore. -> Viz: Interactive buttons + dynamic Chart.js Doughnut Chart. -> Interaction: User clicks a ratio type button, chart and explanation text update instantly. -> Justification: Far more engaging and intuitive than a static table. It allows users to "feel" the difference in weighting. -> Library: Chart.js (Canvas).
+        - Report Info: Academic Test vs. School Report Ratios. -> Goal: Compare/Explore. -> Viz: Interactive buttons + dynamic Chart.js Doughnut Chart. -> Interaction: User clicks a ratio type button or selects a school, chart and explanation text update instantly. -> Justification: Far more engaging and intuitive than a static table. It allows users to "feel" the difference in weighting. -> Library: Chart.js (Canvas).
         - Report Info: Naishinten (School Report) calculation with 3rd-year weighting. -> Goal: Understand/Personalize. -> Viz: Interactive input fields + dynamic Chart.js Bar Chart. -> Interaction: User inputs hypothetical grades, a bar chart visually shows the contribution of each year to the total score. -> Justification: Visually demonstrates the critical importance of 3rd-year grades, which is a key takeaway from the report. -> Library: Chart.js (Canvas).
-        - Report Info: Border Zone selection process. -> Goal: Organize/Understand. -> Viz: Static HTML/CSS diagram. -> Interaction: None. -> Justification: A static flowchart is the clearest way to represent this sequential process without unnecessary complexity. -> Library/Method: HTML/Tailwind.
         - Report Info: Exam Schedule. -> Goal: Inform. -> Viz: Clean HTML table. -> Interaction: None. -> Justification: A table is the standard and most readable format for chronological data. -> Library/Method: HTML/Tailwind.
+        - Report Info: Specific school's exam types and ratio types. -> Goal: Inform/Search. -> Viz: Dropdown selector + dynamic text display. -> Interaction: User selects a school, relevant exam types and ratio type are displayed. This also updates the ratio chart. -> Justification: Allows users to quickly find specific school information directly relevant to the report data, making it actionable. -> Library: Vanilla JS.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
@@ -62,10 +61,13 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#overview" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">概要</a>
+                        <a href="#school-details" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">学校情報</a>
                         <a href="#mechanism" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">合否の仕組み</a>
                         <a href="#naishin" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">内申点</a>
                         <a href="#test" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">学力検査</a>
                         <a href="#schedule" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">日程</a>
+                        <a href="#strategy" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">入試対策</a>
+                        <a href="#conclusion" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">まとめ</a>
                     </div>
                 </div>
             </div>
@@ -93,6 +95,38 @@
             </div>
         </section>
 
+        <section id="school-details" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">志望校別入試詳細</h2>
+            <p class="text-center text-gray-600 mb-10">志望校を選択すると、その高校の内申点・学力検査比率タイプと各教科の問題タイプが表示されます。</p>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <div class="mb-6">
+                    <label for="school-select" class="font-medium text-gray-700 block mb-2">志望校を選択</label>
+                    <select id="school-select" class="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+                        <option value="">学校を選択してください</option>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                     <p class="text-xs text-gray-500 mt-1">※掲載しているデータは2023年度入試の情報に基づいたものです。最新かつ正確な情報は各高校の公式発表をご確認ください。</p>
+                </div>
+
+                <div id="selected-school-info" class="bg-slate-100 p-4 rounded-lg hidden">
+                    <h3 class="font-bold text-lg text-teal-800 mb-2" id="school-name-display"></h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
+                        <div>
+                            <p><span class="font-bold">学科:</span> <span id="school-department"></span></p>
+                            <p><span class="font-bold">内申点・学力検査比率タイプ:</span> <span id="school-ratio-type"></span></p>
+                        </div>
+                        <div>
+                            <p><span class="font-bold">国語問題タイプ:</span> <span id="school-japanese-type"></span></p>
+                            <p><span class="font-bold">数学問題タイプ:</span> <span id="school-math-type"></span></p>
+                            <p><span class="font-bold">英語問題タイプ:</span> <span id="school-english-type"></span></p>
+                            <p><span class="font-bold">相応内申点 (5段階平均目安):</span> <span id="school-target-naishin-avg"></span></p>
+                            <p><span class="font-bold">相応内申点 (450点満点換算):</span> <span id="school-target-naishin-score"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="mechanism" class="mb-16 scroll-mt-20">
             <h2 class="text-3xl font-bold text-center mb-4">合否の仕組みを探る</h2>
             <p class="text-center text-gray-600 mb-10">学力検査と内申点、どちらがどれだけ重視される？比率タイプを選んで、重み付けをグラフで視覚的に確認しましょう。</p>
@@ -100,7 +134,7 @@
             <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
                 <div class="grid lg:grid-cols-2 gap-8 items-center">
                     <div>
-                        <h3 class="text-xl font-bold mb-4">① 比率タイプを選択</h3>
+                        <h3 class="text-xl font-bold mb-4">比率タイプを選択</h3>
                         <div id="ratio-buttons" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3 mb-6">
                             <button data-ratio="I" class="ratio-btn active bg-teal-600 text-white p-3 rounded-lg font-semibold transition">Ⅰ型 (7:3)</button>
                             <button data-ratio="II" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅱ型 (6:4)</button>
@@ -108,7 +142,7 @@
                             <button data-ratio="IV" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅳ型 (4:6)</button>
                             <button data-ratio="V" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅴ型 (3:7)</button>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">② 解説</h3>
+                        <h3 class="text-xl font-bold mb-2">解説</h3>
                         <div id="ratio-explanation" class="bg-slate-100 p-4 rounded-lg">
                             <h4 class="font-bold text-lg text-teal-800 mb-1">Ⅰ型 (7:3)</h4>
                             <p class="text-gray-700">学力検査の比率が<span class="font-bold">7割</span>、調査書（内申点）の比率が<span class="font-bold">3割</span>です。当日の学力検査の結果が非常に重視されるタイプです。</p>
@@ -146,6 +180,10 @@
                              <p class="text-lg font-medium text-gray-700">あなたの一般選抜での内申点（推定）:</p>
                              <p id="naishin-score" class="text-4xl font-bold text-teal-700">333 / 450点</p>
                          </div>
+                         <div id="naishin-comparison" class="mt-4 text-center bg-blue-50 p-4 rounded-lg hidden">
+                            <p class="text-lg font-medium text-gray-700" id="naishin-difference-text"></p>
+                            <p id="naishin-difference-value" class="text-3xl font-bold text-blue-700"></p>
+                        </div>
                     </div>
                     <div class="chart-container">
                         <canvas id="naishinChart"></canvas>
@@ -165,17 +203,17 @@
                 <div id="tab-content-main">
                     <h3 class="text-xl font-bold text-center mb-6">難易度が選べる3教科</h3>
                     <div class="grid sm:grid-cols-3 gap-6">
-                        <div class="bg-slate-100 p-4 rounded-lg text-center">
+                        <div class="bg-slate-100 p-4 rounded-lg">
                             <h4 class="font-bold text-lg">A問題 (基礎)</h4>
-                            <p class="text-sm text-gray-600">基礎的な内容の理解を問います。</p>
+                            <p class="text-sm text-gray-700 mt-1">主に中学校で学習する基本的な内容や基礎知識の正確な理解度を測る問題で構成されます。素早く正確に解答する練習が求められます。</p>
                         </div>
-                        <div class="bg-slate-100 p-4 rounded-lg text-center">
+                        <div class="bg-slate-100 p-4 rounded-lg">
                             <h4 class="font-bold text-lg">B問題 (標準)</h4>
-                            <p class="text-sm text-gray-600">標準的な内容の理解を問います。</p>
+                            <p class="text-sm text-gray-700 mt-1">基礎的な内容に加え、標準的なレベルの応用力や、問われた内容を適切に表現する能力を問う問題が含まれます。基礎を固めた上で、応用問題にも積極的に取り組む必要があります。</p>
                         </div>
-                         <div class="bg-slate-100 p-4 rounded-lg text-center">
+                         <div class="bg-slate-100 p-4 rounded-lg">
                             <h4 class="font-bold text-lg">C問題 (発展)</h4>
-                            <p class="text-sm text-gray-600">応用力、思考力、表現力を問います。</p>
+                            <p class="text-sm text-gray-700 mt-1">高度な思考力、判断力、表現力が問われる発展的な問題で構成されます。特に英語のC問題は、指示文を含め全て英語で記述されており、リスニングテストでは「読む」「聴く」「話す」の総合的な運用能力が問われます。</p>
                         </div>
                     </div>
                      <p class="mt-6 text-sm text-center text-gray-500">※高校・学科によって採用する問題のタイプが異なります。志望校の情報を必ず確認してください。</p>
@@ -185,17 +223,32 @@
                     <div class="grid sm:grid-cols-2 gap-6">
                         <div class="bg-slate-100 p-4 rounded-lg">
                             <h4 class="font-bold text-lg">理科</h4>
-                            <p class="text-sm text-gray-600">生物・物理・化学・地学の4分野から大問形式で出題。実験図の読解や計算問題が重要です。</p>
+                            <p class="text-sm text-gray-700 mt-1">小問集合がなく、生物・物理・化学・地学の4分野から均等に出題されます。問題は生徒が行った実験という形式で進むことが多く、実験図の読解や計算問題が重要です。単なる知識の暗記ではなく、科学的思考力が評価されます。「状態変化・気体」や「地震・火山」が出やすい傾向にあります。</p>
+                            <h5 class="font-bold text-md mt-3">対策</h5>
+                            <ul class="list-disc list-inside text-sm text-gray-700">
+                                <li>自分の得意な分野から解き始めるなど、効率的な解答順序を確立する。</li>
+                                <li>実験レポート形式の問題では、問題文を読み飛ばさずに、図やグラフ、実験手順をしっかりと読み込む。</li>
+                                <li>「水とエタノールの混合物を加熱する実験」や「気体の性質」、「地震の波のグラフの読み取り」、「火山の種類とその特徴」を重点的に学習する。</li>
+                                <li>地震の波のグラフの読み取り方、初期微動継続時間、地震の波の速さ、震源からの距離の求め方を習得する。</li>
+                            </ul>
                         </div>
                         <div class="bg-slate-100 p-4 rounded-lg">
                             <h4 class="font-bold text-lg">社会</h4>
-                            <p class="text-sm text-gray-600">地理・歴史・公民の複合問題が多く、資料読解力や記述力が求められます。時事問題も出題されます。</p>
+                            <p class="text-sm text-gray-700 mt-1">地理・歴史・公民の複合問題が多く、資料読解力や記述力が求められます。時事問題やグラフ読み取り問題が頻出で、歴史分野では年代の縦の流れと、同じ時期の他国の動きも問われます。公民分野の割合が最も高いです。</p>
+                            <h5 class="font-bold text-md mt-3">対策</h5>
+                            <ul class="list-disc list-inside text-sm text-gray-700">
+                                <li>資料の読み取りや記述問題を繰り返し解き、慣れる。</li>
+                                <li>歴史は、単なる暗記ではなく、出来事の背景や関連性を理解する総合的な学習を行う。</li>
+                                <li>公民は出題割合が最も高いため、重点的に学習し得点源とする。</li>
+                                <li>時事問題対策として、日頃から新聞やニュースに目を通し、社会の動きに関心を持つ。</li>
+                                <li>グラフ問題は、与えられた情報から正確に読み取る練習を重ねる。</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
                 <div id="tab-content-eiken" class="hidden">
                     <h3 class="text-xl font-bold text-center mb-6">英語外部検定の活用</h3>
-                    <p class="text-center text-sm text-gray-600 mb-4">英検®などのスコアを、当日の英語の学力検査の点数に読み替えることができます。読み替え点数と当日点数のうち、高い方が採用されます。</p>
+                    <p class="text-center text-sm text-gray-600 mb-4">英語の学力検査において、外部検定（英検、TOEFL iBT, IELTSなど）のスコアを学力検査の成績として読み替えることができます。スコア等に応じた読み替え率が定められており、換算した点数と英語の学力検査の点数を比較し、高い方が学力検査の成績として採用されます。この制度は、生徒が中学校段階から体系的に英語学習に取り組み、実用的な英語力を身につけることへの強い政策的動機付けとなります。</p>
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border">
                             <thead class="bg-teal-600 text-white">
@@ -227,7 +280,7 @@
                             </tbody>
                         </table>
                     </div>
-                     <p class="mt-4 text-xs text-center text-gray-500">※上記は一例です。詳細は必ず大阪府教育委員会の発表を確認してください。</p>
+                     <p class="mt-4 text-xs text-center text-gray-500">※上記は一例です。詳細は必ず大阪府教育委員会の発表をご確認ください。</p>
                 </div>
             </div>
         </section>
@@ -265,7 +318,47 @@
                         </tr>
                     </tbody>
                 </table>
-                 <p class="mt-4 text-xs text-center text-gray-500">※音楽科など一部学科は日程が異なります。詳細は必ず大阪府教育委員会の発表を確認してください。</p>
+                 <p class="mt-4 text-xs text-center text-gray-500">※音楽科など一部学科は日程が異なります。詳細は必ず大阪府教育委員会の発表をご確認ください。</p>
+            </div>
+        </section>
+
+        <section id="strategy" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">入試対策と今後の展望</h2>
+            <p class="text-center text-gray-600 mb-10">大阪府の公立高校入試は複雑ですが、適切な対策で合格に近づけます。</p>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">過去問を活用した効果的な学習法</h3>
+                        <p class="text-gray-700 mb-3">過去問は、入試の出題傾向、問題形式、難易度を具体的に把握するための最も効果的な学習ツールです。特に国語の漢字の「書き取り」と「読み」など、毎年出題される傾向のある分野は、過去問を通じて集中的に対策することで得点源とすることができます。</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                            <li>過去問を解くことで、自身の得意分野と苦手分野を明確にし、試験日までに苦手な点に集中的に対策を講じる。</li>
+                            <li>過去問題集は市販されており、オンラインでも入手可能。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">最新情報の確認と個別相談の推奨</h3>
+                        <p class="text-gray-700 mb-3">入試制度や日程、各高校の選抜方式、問題タイプなどは変更される可能性があるため、常に大阪府教育委員会や各高校の公式ウェブサイトで最新情報を確認することが不可欠です。</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                            <li>内申点や当日点の合格ラインは年度ごとの受験者層や倍率、問題の難易度によって変動する可能性がある。公開されている「合格ライン」はあくまで安全圏の目安として捉える。</li>
+                            <li>複雑な入試制度を正確に理解し、自身の学力や特性に合わせた最適な学習計画や志望校選定を行うためには、個別相談や学習塾の専門的なサポートを活用することも非常に有効。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">まとめ</h2>
+            <p class="text-center text-gray-600 mb-10">大阪府の公立高校入試は、生徒一人ひとりの多様な個性と学力を総合的に評価するために、緻密に設計された制度です。</p>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg text-gray-700">
+                <ul class="list-disc list-inside space-y-3">
+                    <li>**内申点**: 中学1年生から評価対象となり、特に中学3年生の評定が合否に大きく影響します。日々の学習と提出物が重要です。</li>
+                    <li>**学力検査問題のタイプ**: 国語・数学・英語はA・B・Cの3タイプに分かれ、志望校によって選択問題が異なります。理科・社会は共通問題です。</li>
+                    <li>**比率タイプ（I～V型）**: 学力検査と内申点の比重が高校ごとに異なり、自身の得意分野に合わせて戦略的に学校を選ぶことが重要です。</li>
+                    <li>**自己申告書**: ボーダーゾーンの合否判定において、学力以外の側面も合否を左右する重要な要素となります。</li>
+                    <li>**英語外部検定**: 英検などのスコアを英語の学力検査に換算できる制度があり、活用を検討することで有利になる可能性があります。</li>
+                </ul>
+                <p class="mt-6 text-md text-center font-semibold text-teal-800">合格への道のりは、最新の入試情報を常に確認し、自身の得意・不得意に合わせた戦略的な学習計画と、学校の選抜方式を深く理解した上での志望校選びが鍵となります。複雑な制度を乗り越え、最適な進路を選択するためには、必要に応じて専門家への個別相談も有効な手段となるでしょう。</p>
             </div>
         </section>
 
@@ -286,6 +379,103 @@
                 'III': { values: [5, 5], label: 'Ⅲ型 (5:5)', text: '学力検査の比率が<span class="font-bold">5割</span>、調査書（内申点）の比率が<span class="font-bold">5割</span>です。学力と内申点が均等に評価されます。' },
                 'IV': { values: [4, 6], label: 'Ⅳ型 (4:6)', text: '学力検査の比率が<span class="font-bold">4割</span>、調査書（内申点）の比率が<span class="font-bold">6割</span>です。日頃の学習成果がやや重視されます。' },
                 'V': { values: [3, 7], label: 'Ⅴ型 (3:7)', text: '学力検査の比率が<span class="font-bold">3割</span>、調査書（内申点）の比率が<span class="font-bold">7割</span>です。調査書（内申点）が非常に重視されるタイプです。' },
+            };
+
+            // 高度な高校データ (Report data integrated)
+            const highSchoolData = {
+                'owaHS': { name: '桜和高等学校', department: '教育文理学科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: 300, targetNaishinAvg: 3.3 },
+                'sakuramiyaHS': { name: '桜宮高等学校', department: '普通科スポーツ健康学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: 335, targetNaishinAvg: 3.7 },
+                'higashiHS': { name: '東高等学校', department: '普通科英語科理数科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (260 / 270) * 450, targetNaishinAvg: 4.8 }, // Convert 270-base to 450-base for consistency
+                'miyakojimaKogyoHS': { name: '都島工業高等学校', department: '工業科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: 330, targetNaishinAvg: 3.7 },
+                'nishinodaKokaHS': { name: '西野田工科高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null }, // Changed to null for N/A
+                'sakuyakonohanaHS': { name: '咲くやこの花高等学校', department: '総合学科演劇科食物文化科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: (295 / 360) * 450, targetNaishinAvg: 4.1 }, // Convert 360-base to 450-base
+                'otemaeHS': { name: '大手前高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
+                'minatoHS': { name: '港高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: 345, targetNaishinAvg: 3.8 },
+                'ichiokaHS': { name: '市岡高等学校', department: '普通科単位制', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (250 / 270) * 450, targetNaishinAvg: 4.6 }, // Convert 270-base to 450-base
+                'izumioKogyoHS': { name: '泉尾工業高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'taishohakuryoHS': { name: '大正白稜高等学校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'shimizudaniHS': { name: '清水谷高等学校', department: '普通科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (260 / 270) * 450, targetNaishinAvg: 4.8 }, // Convert 270-base to 450-base
+                'yuhigaokaHS': { name: '夕陽丘高等学校', department: '普通科音楽科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (245 / 270) * 450, targetNaishinAvg: 4.5 }, // Convert 270-base to 450-base
+                'kozuHS': { name: '高津高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'kitanoHS': { name: '北野高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
+                'tennojiHS': { name: '天王寺高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
+                'mikunigaokaHS': { name: '三国丘高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
+                'tsurumishogyoHS': { name: '鶴見商業高等学校', department: '商業科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'IV', targetNaishinScore: null, targetNaishinAvg: null },
+                'sumiyoshishogyoHS': { name: '住吉商業高等学校', department: '商業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'IV', targetNaishinScore: null, targetNaishinAvg: null },
+                'osakaBusinessFrontierHS': { name: '大阪ビジネスフロンティア高等学校', department: 'グローバルビジネス科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'imamiyaHS': { name: '今宮高等学校', department: '総合学科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'yodoShogyoHS': { name: '淀商業高等学校', department: '商業科福祉ボランティア科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'higashiyodogawaHS': { name: '東淀川高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'higashiyodoKogyoHS': { name: '東淀工業高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'shibajimaHS': { name: '柴島高等学校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'yodogawaSeiryuHS': { name: '淀川清流高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'osakaWakabaHS': { name: '大阪わかば高等学校', department: '普通科（多部制単位制Ⅰ・Ⅱ部）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'ikunoKogyoHS': { name: '生野工業高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'asahiHS': { name: '旭高等学校', department: '普通科国際文化科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'yodogawaKokaHS': { name: '淀川工科高等学校', department: '工業科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'seijoHS': { name: '成城高等学校', department: 'エンパワメントスクール', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'hanaiHS': { name: '汎愛高等学校', department: '普通科体育科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'abenoHS': { name: '阿倍野高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'kogeiHS': { name: '工芸高等学校', department: '工業科美術科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'sumiyoshiHS': { name: '住吉高等学校', department: '国際文化科総合科学科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'konanzokeiHS': { name: '港南造形高等学校', department: '総合造形科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'suitokokusaiHS': { name: '水都国際高等学校', department: 'グローバル探究科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'hannanHS': { name: '阪南高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'kyoikuCenterFuzokuHS': { name: '教育センター附属高等学校', department: '普通科 (単位制)', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'higashisumiyoshiHS': { name: '東住吉高等学校', department: '普通科芸能文化科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'higashisumiyoshiSogoHS': { name: '東住吉総合高等学校', department: '総合学科（クリエイティブスクール）', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'nagayoshiHS': { name: '長吉高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'imamiyaKokaHS': { name: '今宮工科高等学校', department: '工業科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'nishinariHS': { name: '西成高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'sakurazukaHS': { name: '桜塚高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'toyoshimaHS': { name: '豊島高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'tonoyamaHS': { name: '刀根山高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'toyonakaHS': { name: '豊中高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'senriSeiunHS': { name: '千里青雲高等学校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'ikedaHS': { name: '池田高等学校', department: '普通科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'shibuyaHS': { name: '渋谷高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'engeiHS': { name: '園芸高等学校', department: 'フラワーファクトリ科環境緑化科バイオサイエンス科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'IV', targetNaishinScore: null, targetNaishinAvg: null },
+                'minohHS': { name: '箕面高等学校', department: '普通科グローバル科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'minohHigashiHS': { name: '箕面東高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'toyonakaNoseBunkouHS': { name: '豊中高等学校能勢分校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'kitasenriHS': { name: '北千里高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'suitaHS': { name: '吹田高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'suitaHigashiHS': { name: '吹田東高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'yamadaHS': { name: '山田高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'senriHS': { name: '千里高等学校', department: '国際文化科総合科学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'akutagawaHS': { name: '芥川高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'abunoHS': { name: '阿武野高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'ogawaraHS': { name: '大冠高等学校', department: '普通科', japaneseType: 'N/A', mathType: 'N/A', englishType: 'N/A', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
+                'kishiwadaHS': { name: '岸和田高等学校', department: '専門学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'ibarakiHS': { name: '茨木高等学校', department: '専門学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'shijonawateHS': { name: '四條畷高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'ikunoHS': { name: '生野高等学校', department: '専門学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'senyoHS': { name: '泉陽高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'tominbayashiHS': { name: '富田林高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'otoriHS': { name: '鳳高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'izumiHS': { name: '和泉高等学校', department: '普通科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'sanoHS': { name: '佐野高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'tomiokaHS': { name: '登美丘高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'sayamaHS': { name: '狭山高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'sakaiHigashiHS': { name: '堺東高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'kawachiHS': { name: '河南高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'kumedaHS': { name: '久米田高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'takaishiHS': { name: '高石高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'hinenoHS': { name: '日根野高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'kaizukaMinamiHS': { name: '貝塚南高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'kanakokaHS': { name: '金岡高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'naganoHS': { name: '長野高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'sakaiNishiHS': { name: '堺西高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'higashimozumoHS': { name: '東百舌鳥高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
+                'izumiotsuHS': { name: '泉大津高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
+                'kishiwadaShiritsuSangyoHS': { name: '岸和田市立産業高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'kongoHS': { name: '金剛高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
+                'neyagawaHS': { name: '寝屋川高等学校', department: '普通科', japaneseType: 'C', mathType: 'C', englishType: 'C', ratioType: 'I', targetNaishinScore: 4.7 * 90, targetNaishinAvg: 4.7 }, // Assuming 4.7 is average, converting to score
+                'makinoHS': { name: '牧野高等学校', department: '普通科', japaneseType: 'C', mathType: 'C', englishType: 'C', ratioType: 'I', targetNaishinScore: 4.5 * 90, targetNaishinAvg: 4.5 }, // Assuming 4.5 is average, converting to score
+                'hirakataHS': { name: '枚方高等学校', department: '普通科', japaneseType: 'B', mathType: 'B', englishType: 'B', ratioType: 'III', targetNaishinScore: 4.2 * 90, targetNaishinAvg: 4.2 }, // Assuming 4.2 is average, converting to score
+                'korigaokaHS': { name: '香里丘高等学校', department: '普通科', japaneseType: 'B', mathType: 'B', englishType: 'B', ratioType: 'I', targetNaishinScore: 3.9 * 90, targetNaishinAvg: 3.9 }, // Assuming 3.9 is average, converting to score
+                'ichiritsuHS': { name: 'いちりつ高等学校', department: '普通科専門学科', japaneseType: 'B', mathType: 'B', englishType: 'B', ratioType: 'I', targetNaishinScore: 4.4 * 90, targetNaishinAvg: 4.4 }, // Assuming 4.4 is average, converting to score
+                'chuoHS': { name: '中央高等学校', department: '普通科ビジネス科 (昼夜間単位制)', japaneseType: 'N/A', mathType: 'N/A', englishType: 'N/A', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null }
             };
 
             let ratioChart, naishinChart;
@@ -376,25 +566,120 @@
             
             const ratioButtons = document.querySelectorAll('.ratio-btn');
             const ratioExplanation = document.getElementById('ratio-explanation');
-            ratioButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const ratioType = button.dataset.ratio;
+            
+            function updateRatioDisplay(ratioType) {
+                if (ratioType && ratioData[ratioType]) {
                     createRatioChart(ratioType);
-                    
                     const explanationData = ratioData[ratioType];
                     ratioExplanation.innerHTML = `
                         <h4 class="font-bold text-lg text-teal-800 mb-1">${explanationData.label}</h4>
                         <p class="text-gray-700">${explanationData.text}</p>
                     `;
-                    
-                    ratioButtons.forEach(btn => {
-                        btn.classList.remove('active', 'bg-teal-600', 'text-white');
-                        btn.classList.add('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
-                    });
-                    button.classList.add('active', 'bg-teal-600', 'text-white');
-                    button.classList.remove('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
+                } else {
+                    // Handle N/A or undefined ratioType
+                    if (ratioChart) {
+                        ratioChart.destroy(); // Destroy current chart if N/A
+                    }
+                    ratioExplanation.innerHTML = `
+                        <h4 class="font-bold text-lg text-teal-800 mb-1">情報なし</h4>
+                        <p class="text-gray-700">この学校の比率タイプは公開されていません。または情報がありません。</p>
+                    `;
+                }
+
+                ratioButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-teal-600', 'text-white');
+                    btn.classList.add('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
+                });
+                const activeButton = document.querySelector(`.ratio-btn[data-ratio="${ratioType}"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active', 'bg-teal-600', 'text-white');
+                    activeButton.classList.remove('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
+                }
+            }
+
+            ratioButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const ratioType = button.dataset.ratio;
+                    updateRatioDisplay(ratioType);
+                    document.getElementById('school-select').value = ''; // Reset school select when ratio button is clicked
+                    document.getElementById('selected-school-info').classList.add('hidden'); // Hide school info
+                    document.getElementById('naishin-comparison').classList.add('hidden'); // Hide comparison when school is unselected
                 });
             });
+
+            const schoolSelect = document.getElementById('school-select');
+            const schoolNameDisplay = document.getElementById('school-name-display');
+            const schoolDepartment = document.getElementById('school-department');
+            const schoolRatioType = document.getElementById('school-ratio-type');
+            const schoolJapaneseType = document.getElementById('school-japanese-type');
+            const schoolMathType = document.getElementById('school-math-type');
+            const schoolEnglishType = document.getElementById('school-english-type');
+            const schoolTargetNaishinAvg = document.getElementById('school-target-naishin-avg');
+            const schoolTargetNaishinScore = document.getElementById('school-target-naishin-score');
+            const selectedSchoolInfoDiv = document.getElementById('selected-school-info');
+            const naishinComparisonDiv = document.getElementById('naishin-comparison');
+            const naishinDifferenceTextEl = document.getElementById('naishin-difference-text');
+            const naishinDifferenceValueEl = document.getElementById('naishin-difference-value');
+
+
+            // Populate school select dropdown
+            for (const key in highSchoolData) {
+                const school = highSchoolData[key];
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = school.name + (school.department && school.department !== 'N/A' ? ' (' + school.department + ')' : ''); // Only add department if it's not empty/N/A
+                schoolSelect.appendChild(option);
+            }
+
+            schoolSelect.addEventListener('change', (event) => {
+                const selectedSchoolKey = event.target.value;
+                if (selectedSchoolKey && highSchoolData[selectedSchoolKey]) {
+                    const school = highSchoolData[selectedSchoolKey];
+                    
+                    schoolNameDisplay.textContent = school.name;
+                    schoolDepartment.textContent = school.department;
+                    schoolRatioType.textContent = school.ratioType + (school.ratioType !== 'N/A' ? '型' : '');
+                    schoolJapaneseType.textContent = school.japaneseType;
+                    schoolMathType.textContent = school.mathType;
+                    schoolEnglishType.textContent = school.englishType;
+
+                    // Display target naishin scores
+                    if (school.targetNaishinAvg !== null && school.targetNaishinAvg !== 'N/A') {
+                        schoolTargetNaishinAvg.textContent = school.targetNaishinAvg.toFixed(1);
+                        schoolTargetNaishinScore.textContent = Math.round(school.targetNaishinScore) + '点';
+                    } else {
+                        schoolTargetNaishinAvg.textContent = '情報なし';
+                        schoolTargetNaishinScore.textContent = '情報なし';
+                    }
+                    
+                    selectedSchoolInfoDiv.classList.remove('hidden'); // Show school info
+
+                    if (school.ratioType !== 'N/A') {
+                        updateRatioDisplay(school.ratioType); // Update ratio chart based on school's type
+                    } else {
+                        // If ratio data is N/A, remove active class from all ratio buttons and clear explanation
+                        ratioButtons.forEach(btn => {
+                            btn.classList.remove('active', 'bg-teal-600', 'text-white');
+                            btn.classList.add('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
+                        });
+                        if (ratioChart) {
+                            ratioChart.destroy();
+                        }
+                        ratioExplanation.innerHTML = `
+                            <h4 class="font-bold text-lg text-teal-800 mb-1">情報なし</h4>
+                            <p class="text-gray-700">この学校の比率タイプは公開されていません。または情報がありません。</p>
+                        `;
+                    }
+                    calculateNaishinDifference(); // Calculate and display difference when a school is selected
+
+                } else {
+                    selectedSchoolInfoDiv.classList.add('hidden'); // Hide school info if no school or default is selected
+                    naishinComparisonDiv.classList.add('hidden'); // Hide comparison when school is unselected
+                    // Revert to default ratio display if no school is selected
+                    updateRatioDisplay('I');
+                }
+            });
+
 
             const naishinInputs = document.querySelectorAll('#naishin-inputs input');
             const naishinScoreEl = document.getElementById('naishin-score');
@@ -411,7 +696,42 @@
                 
                 naishinScoreEl.textContent = `${Math.round(totalScore)} / 450点`;
                 createNaishinChart([Math.round(score1), Math.round(score2), Math.round(score3)]);
+
+                calculateNaishinDifference(); // Recalculate difference whenever inner score changes
             }
+
+            function calculateNaishinDifference() {
+                const selectedSchoolKey = schoolSelect.value;
+                const userNaishinScore = parseFloat(naishinScoreEl.textContent.split(' ')[0]);
+
+                if (selectedSchoolKey && highSchoolData[selectedSchoolKey] && highSchoolData[selectedSchoolKey].targetNaishinScore !== null && highSchoolData[selectedSchoolKey].targetNaishinScore !== 'N/A') {
+                    const targetScore = highSchoolData[selectedSchoolKey].targetNaishinScore;
+                    const difference = userNaishinScore - targetScore;
+
+                    naishinComparisonDiv.classList.remove('hidden');
+                    let differenceText = '';
+                    let textColorClass = '';
+
+                    if (difference >= 0) {
+                        naishinDifferenceTextEl.textContent = "目標の内申点を上回っています！素晴らしい！";
+                        differenceText = `+${Math.round(difference)}点`;
+                        textColorClass = 'text-green-700'; // Positive difference is good
+                    } else { // difference < 0
+                        const deficit_total_points = Math.abs(difference);
+                        // Assuming deficit must be made up in 3rd year 9 subjects
+                        const avg_5_point_increase_needed = deficit_total_points / (9 * 6); // 9 subjects, 6x weight for 3rd year
+                        
+                        naishinDifferenceTextEl.textContent = "目標の内申点まであと少し！";
+                        differenceText = `各科目平均+${avg_5_point_increase_needed.toFixed(1)}点を目指そう！`; // Displaying 5-point average needed
+                        textColorClass = 'text-red-700'; // Negative difference means below target
+                    }
+                    naishinDifferenceValueEl.className = `text-3xl font-bold ${textColorClass}`;
+                    naishinDifferenceValueEl.textContent = differenceText;
+                } else {
+                    naishinComparisonDiv.classList.add('hidden'); // Hide if no school selected or target data is N/A
+                }
+            }
+
 
             naishinInputs.forEach(input => {
                 input.addEventListener('input', calculateNaishin);
@@ -431,10 +751,14 @@
             };
 
             function switchTab(tabName) {
-                Object.values(tabButtons).forEach(btn => btn.classList.remove('active'));
+                Object.values(tabButtons).forEach(btn => {
+                    btn.classList.remove('active', 'bg-teal-600', 'text-white');
+                    btn.classList.add('border-transparent', 'text-gray-500');
+                });
                 Object.values(tabContents).forEach(content => content.classList.add('hidden'));
 
-                tabButtons[tabName].classList.add('active');
+                tabButtons[tabName].classList.add('active', 'bg-teal-600', 'text-white');
+                tabButtons[tabName].classList.remove('border-transparent', 'text-gray-500');
                 tabContents[tabName].classList.remove('hidden');
             }
             
@@ -443,8 +767,9 @@
             tabButtons.eiken.addEventListener('click', () => switchTab('eiken'));
 
 
-            createRatioChart('I');
-            calculateNaishin();
+            updateRatioDisplay('I'); // Initialize with I type
+            calculateNaishin(); // Initial calculation and difference check
+            switchTab('main'); // Initialize academic test tab
         });
     </script>
 </body>
