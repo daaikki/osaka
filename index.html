@@ -3,773 +3,1445 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大阪府公立高校入試制度 - インタラクティブガイド 2025</title>
+    <title>大阪府公立高校入試制度 完全ガイド</title>
+    <!-- Tailwind CSS CDNを読み込み -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDNを読み込み -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Noto Sans JPを読み込み -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Calm Neutral with Teal Accent (bg-slate-100, white, teal-600, gray-700) -->
-    <!-- Application Structure Plan: A dashboard-style SPA with a top navigation bar. The structure prioritizes user interaction and understanding over the linear format of the source report. Key sections include an overview, an interactive "School Details" section, an interactive "Pass/Fail Mechanism" simulator, an interactive "School Report" calculator, and clear sections for the academic test and schedule. This design allows users (students/parents) to quickly access information relevant to them and simulate personal scenarios, which is the most effective way to understand the complex exam system. -->
-    <!-- Visualization & Content Choices:
-        - Report Info: Academic Test vs. School Report Ratios. -> Goal: Compare/Explore. -> Viz: Interactive buttons + dynamic Chart.js Doughnut Chart. -> Interaction: User clicks a ratio type button or selects a school, chart and explanation text update instantly. -> Justification: Far more engaging and intuitive than a static table. It allows users to "feel" the difference in weighting. -> Library: Chart.js (Canvas).
-        - Report Info: Naishinten (School Report) calculation with 3rd-year weighting. -> Goal: Understand/Personalize. -> Viz: Interactive input fields + dynamic Chart.js Bar Chart. -> Interaction: User inputs hypothetical grades, a bar chart visually shows the contribution of each year to the total score. -> Justification: Visually demonstrates the critical importance of 3rd-year grades, which is a key takeaway from the report. -> Library: Chart.js (Canvas).
-        - Report Info: Exam Schedule. -> Goal: Inform. -> Viz: Clean HTML table. -> Interaction: None. -> Justification: A table is the standard and most readable format for chronological data. -> Library/Method: HTML/Tailwind.
-        - Report Info: Specific school's exam types and ratio types. -> Goal: Inform/Search. -> Viz: Dropdown selector + dynamic text display. -> Interaction: User selects a school, relevant exam types and ratio type are displayed. This also updates the ratio chart. -> Justification: Allows users to quickly find specific school information directly relevant to the report data, making it actionable. -> Library: Vanilla JS.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <!-- MathJax CDNを読み込み（LaTeX表示のため） -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
     <style>
+        /* 基本フォントと背景色を設定 */
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            scroll-behavior: smooth;
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f0f4f8; /* 明るいグレーブルーの背景 */
+            scroll-behavior: smooth; /* スムーズスクロール */
         }
+        /* チャートコンテナのスタイル設定 */
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 450px;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+            height: 350px;
+            max-height: 50vh;
         }
-        @media (min-width: 768px) {
+        /* モバイル表示時のチャートコンテナの高さ調整 */
+        @media (max-width: 768px) {
             .chart-container {
-                height: 350px;
+                height: 300px;
+                max-height: 40vh;
             }
         }
+        /* フローチャートボックスのスタイル設定 */
+        .flow-chart-box {
+            border: 2px solid #00B4D8; /* ライトブルーのボーダー */
+            background-color: #CAF0F8; /* 非常に明るいブルーの背景 */
+            color: #03045E; /* 濃いインディゴブルーのテキスト */
+            position: relative;
+        }
+        /* フローチャートの矢印のスタイル設定 */
+        .flow-chart-arrow {
+            color: #0077B6; /* ミディアムブルーの矢印 */
+        }
+        /* セクションタイトルのスタイル設定 */
+        .section-title {
+            color: #03045E; /* 濃いインディゴブルーのテキスト */
+            border-bottom: 3px solid #00B4D8; /* ライトブルーの下線 */
+        }
+        /* カードコンポーネントのスタイル設定 */
+        .card {
+            background-color: white; /* 白い背景 */
+            border-radius: 0.75rem; /* 角丸 */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* シャドウ */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* ホバー時のトランジション */
+        }
+        /* カードホバー時のスタイル設定 */
+        .card:hover {
+            transform: translateY(-5px); /* 上に少し移動 */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1); /* 強めのシャドウ */
+        }
+        /* ナビゲーションリンクのスタイル */
         .nav-link {
-            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* テキストの折り返しを防ぐ */
         }
         .nav-link:hover {
-            color: #0d9488; /* teal-600 */
-            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.2);
         }
+
+        /* タブのスタイル */
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease, border-bottom 0.3s ease;
+            color: #4a5568; /* gray-700 */
+            border-bottom: 2px solid transparent; /* 初期状態では透明な下線 */
+        }
+
         .tab-button.active {
-            background-color: #0d9488; /* teal-600 */
+            background-color: #0077B6; /* secondary blue */
             color: white;
-            border-color: #0d9488;
+            font-weight: bold;
+            border-bottom: 2px solid #0077B6; /* アクティブなタブの色 */
+        }
+        .tab-button:not(.active):hover {
+            background-color: #e2e8f0; /* hover:bg-gray-200 */
+            color: #03045E; /* primary blue */
+            border-bottom: 2px solid #00B4D8; /* tertiary blue for hover */
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* MathJaxのフォントを上書きしないように調整 (サイズと太字は個別のTailwindクラスで制御) */
+        .math-text {
+            /* font-size: 1rem; */
+            /* font-weight: normal; */
         }
     </style>
 </head>
-<body class="bg-slate-100 text-gray-800">
+<body class="bg-[#f0f4f8] text-[#333]">
 
-    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0">
-                    <a href="#" class="text-xl font-bold text-teal-700">大阪府公立高校入試ガイド</a>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#overview" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">概要</a>
-                        <a href="#school-details" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">学校情報</a>
-                        <a href="#mechanism" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">合否の仕組み</a>
-                        <a href="#naishin" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">内申点</a>
-                        <a href="#test" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">学力検査</a>
-                        <a href="#schedule" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">日程</a>
-                        <a href="#strategy" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">入試対策</a>
-                        <a href="#conclusion" class="nav-link text-gray-600 font-medium px-3 py-2 rounded-md text-sm">まとめ</a>
-                    </div>
-                </div>
-            </div>
+    <!-- ヘッダーセクション -->
+    <header class="bg-[#03045E] text-white p-6 text-center shadow-lg sticky top-0 z-50">
+        <h1 class="text-3xl md:text-4xl font-bold">大阪府公立高校入試制度 完全ガイド</h1>
+        <p class="mt-2 text-lg text-[#CAF0F8]">ビジュアル解説</p>
+        <!-- ナビゲーションメニュー -->
+        <nav class="mt-4">
+            <ul class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm md:text-base">
+                <li><a href="#overview" class="nav-link">全体像</a></li>
+                <li><a href="#naishin" class="nav-link">内申点</a></li>
+                <li><a href="#naishin-calculation" class="nav-link">内申点計算</a></li>
+                <li><a href="#test-types" class="nav-link">学力検査</a></li>
+                <li><a href="#school-data-list" class="nav-link">高槻エリア高校</a></li>
+                <li><a href="#exam-details" class="nav-link">問題対策</a></li>
+                <li><a href="#curriculum-overview" class="nav-link">単元概要</a></li>
+                <li><a href="#shiritsu" class="nav-link">私立併願</a></li>
+                <li><a href="#school-locations" class="nav-link">高校所在地</a></li>
+                <li><a href="#application-flow" class="nav-link">出願の流れ</a></li>
+                <li><a href="#schedule" class="nav-link">入試日程</a></li>
+                <li><a href="#itsuki-moshi" class="nav-link">五ツ木模試</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+            </ul>
         </nav>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        
-        <section class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">令和7年度 大阪府公立高校入試制度</h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">複雑な入試制度を、インタラクティブなツールで分かりやすく解説します。自分だけのシナリオで合格の仕組みをシミュレーションしてみましょう。</p>
-        </section>
+    <!-- メインコンテンツ -->
+    <main class="container mx-auto p-4 md:p-8">
 
-        <section id="overview" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-10">入試の全体像</h2>
-            <div class="grid md:grid-cols-2 gap-8 text-center">
-                <div class="bg-white p-8 rounded-xl shadow-md">
-                    <h3 class="text-2xl font-bold mb-3 text-teal-700">特別入学者選抜</h3>
-                    <p class="text-gray-600">専門学科や総合学科（エンパワメントスクール）などで実施。学力検査に加え、<span class="font-bold">実技検査</span>や<span class="font-bold">面接</span>が課されます。</p>
-                </div>
-                <div class="bg-white p-8 rounded-xl shadow-md">
-                    <h3 class="text-2xl font-bold mb-3 text-teal-700">一般入学者選抜</h3>
-                    <p class="text-gray-600">普通科や文理学科など、多くの学科で実施。主に<span class="font-bold">学力検査</span>と<span class="font-bold">調査書（内申点）</span>で合否が判定されます。</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="school-details" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-4">志望校別入試詳細</h2>
-            <p class="text-center text-gray-600 mb-10">志望校を選択すると、その高校の内申点・学力検査比率タイプと各教科の問題タイプが表示されます。</p>
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                <div class="mb-6">
-                    <label for="school-select" class="font-medium text-gray-700 block mb-2">志望校を選択</label>
-                    <select id="school-select" class="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-                        <option value="">学校を選択してください</option>
-                        <!-- Options will be populated by JavaScript -->
-                    </select>
-                     <p class="text-xs text-gray-500 mt-1">※掲載しているデータは2023年度入試の情報に基づいたものです。最新かつ正確な情報は各高校の公式発表をご確認ください。</p>
-                </div>
-
-                <div id="selected-school-info" class="bg-slate-100 p-4 rounded-lg hidden">
-                    <h3 class="font-bold text-lg text-teal-800 mb-2" id="school-name-display"></h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-                        <div>
-                            <p><span class="font-bold">学科:</span> <span id="school-department"></span></p>
-                            <p><span class="font-bold">内申点・学力検査比率タイプ:</span> <span id="school-ratio-type"></span></p>
-                        </div>
-                        <div>
-                            <p><span class="font-bold">国語問題タイプ:</span> <span id="school-japanese-type"></span></p>
-                            <p><span class="font-bold">数学問題タイプ:</span> <span id="school-math-type"></span></p>
-                            <p><span class="font-bold">英語問題タイプ:</span> <span id="school-english-type"></span></p>
-                            <p><span class="font-bold">相応内申点 (5段階平均目安):</span> <span id="school-target-naishin-avg"></span></p>
-                            <p><span class="font-bold">相応内申点 (450点満点換算):</span> <span id="school-target-naishin-score"></span></p>
-                        </div>
+        <!-- 入試制度の全体像セクション -->
+        <section id="overview" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">入試制度の全体像</h2>
+                <p class="text-base md:text-lg mb-6">大阪府の公立高校入試は、大きく「特別入学者選抜」と「一般入学者選抜」の2つの柱で構成されています。それぞれの選抜方式は対象となる学科や評価尺度が異なり、生徒の特性や志望校に応じた戦略が求められます。このインフォグラフィックで、複雑な制度の要点を掴みましょう。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                    <div class="border-2 border-[#00B4D8] rounded-lg p-6 bg-[#CAF0F8]">
+                        <h3 class="text-xl font-bold text-[#03045E]">特別入学者選抜</h3>
+                        <p class="mt-2">専門学科や総合学科が対象。実技検査や面接が課され、一般選抜より早期に実施されます。</p>
+                        <p class="text-3xl mt-4">🎨 🎵 🏃</p>
+                    </div>
+                    <div class="border-2 border-[#00B4D8] rounded-lg p-6 bg-[#E9F9FF]">
+                        <h3 class="text-xl font-bold text-[#03045E]">一般入学者選抜</h3>
+                        <p class="mt-2">普通科をはじめ、多くの学科が対象。学力検査と調査書（内申点）で総合的に評価されます。</p>
+                        <p class="text-3xl mt-4">📝 💯</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="mechanism" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-4">合否の仕組みを探る</h2>
-            <p class="text-center text-gray-600 mb-10">学力検査と内申点、どちらがどれだけ重視される？比率タイプを選んで、重み付けをグラフで視覚的に確認しましょう。</p>
-            
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                <div class="grid lg:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <h3 class="text-xl font-bold mb-4">比率タイプを選択</h3>
-                        <div id="ratio-buttons" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3 mb-6">
-                            <button data-ratio="I" class="ratio-btn active bg-teal-600 text-white p-3 rounded-lg font-semibold transition">Ⅰ型 (7:3)</button>
-                            <button data-ratio="II" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅱ型 (6:4)</button>
-                            <button data-ratio="III" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅲ型 (5:5)</button>
-                            <button data-ratio="IV" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅳ型 (4:6)</button>
-                            <button data-ratio="V" class="ratio-btn bg-white hover:bg-teal-50 border border-gray-300 p-3 rounded-lg font-semibold transition">Ⅴ型 (3:7)</button>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">解説</h3>
-                        <div id="ratio-explanation" class="bg-slate-100 p-4 rounded-lg">
-                            <h4 class="font-bold text-lg text-teal-800 mb-1">Ⅰ型 (7:3)</h4>
-                            <p class="text-gray-700">学力検査の比率が<span class="font-bold">7割</span>、調査書（内申点）の比率が<span class="font-bold">3割</span>です。当日の学力検査の結果が非常に重視されるタイプです。</p>
+        <!-- 調査書（内申点）の比重セクション -->
+        <section id="naishin" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">最重要ポイント：調査書（内申点）の比重</h2>
+                <p class="text-base md:text-lg mb-6">大阪府の入試で特に重要なのが、中学3年生の内申点の扱いです。合否を大きく左右するこの比重を正しく理解し、生徒指導に活かすことが不可欠です。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="w-full">
+                        <div class="chart-container mx-auto">
+                            <canvas id="naishinChart"></canvas>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="ratioChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="naishin" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-4">内申点シミュレーター</h2>
-            <p class="text-center text-gray-600 mb-10">中学3年間の成績がどのように評価されるか計算してみましょう。特に3年生の成績の重要性が一目でわかります。</p>
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                <div class="grid lg:grid-cols-2 gap-8 items-center">
-                    <div>
-                         <h3 class="text-xl font-bold mb-4">① 各学年の9教科の平均評定を入力</h3>
-                         <div id="naishin-inputs" class="space-y-4">
-                            <div>
-                                <label for="y1" class="font-medium">中学1年生 (x2倍)</label>
-                                <input type="number" id="y1" min="1" max="5" step="0.1" value="3.5" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
-                            </div>
-                            <div>
-                                <label for="y2" class="font-medium">中学2年生 (x2倍)</label>
-                                <input type="number" id="y2" min="1" max="5" step="0.1" value="3.5" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
-                            </div>
-                             <div>
-                                <label for="y3" class="font-medium text-red-600">中学3年生 (x6倍)</label>
-                                <input type="number" id="y3" min="1" max="5" step="0.1" value="4.0" class="w-full mt-1 p-2 border border-gray-300 rounded-md ring-2 ring-red-200">
-                            </div>
-                         </div>
-                         <div class="mt-6 text-center bg-teal-50 p-4 rounded-lg">
-                             <p class="text-lg font-medium text-gray-700">あなたの一般選抜での内申点（推定）:</p>
-                             <p id="naishin-score" class="text-4xl font-bold text-teal-700">333 / 450点</p>
-                         </div>
-                         <div id="naishin-comparison" class="mt-4 text-center bg-blue-50 p-4 rounded-lg hidden">
-                            <p class="text-lg font-medium text-gray-700" id="naishin-difference-text"></p>
-                            <p id="naishin-difference-value" class="text-3xl font-bold text-blue-700"></p>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="naishinChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="test" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-10">学力検査のポイント</h2>
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                <div class="flex justify-center mb-6 border-b">
-                    <button id="tab-main" class="tab-button active py-2 px-6 font-medium border-b-2">国語・数学・英語</button>
-                    <button id="tab-sub" class="tab-button py-2 px-6 font-medium border-b-2 border-transparent text-gray-500">理科・社会</button>
-                    <button id="tab-eiken" class="tab-button py-2 px-6 font-medium border-b-2 border-transparent text-gray-500">英語外部検定</button>
-                </div>
-                <div id="tab-content-main">
-                    <h3 class="text-xl font-bold text-center mb-6">難易度が選べる3教科</h3>
-                    <div class="grid sm:grid-cols-3 gap-6">
-                        <div class="bg-slate-100 p-4 rounded-lg">
-                            <h4 class="font-bold text-lg">A問題 (基礎)</h4>
-                            <p class="text-sm text-gray-700 mt-1">主に中学校で学習する基本的な内容や基礎知識の正確な理解度を測る問題で構成されます。素早く正確に解答する練習が求められます。</p>
-                        </div>
-                        <div class="bg-slate-100 p-4 rounded-lg">
-                            <h4 class="font-bold text-lg">B問題 (標準)</h4>
-                            <p class="text-sm text-gray-700 mt-1">基礎的な内容に加え、標準的なレベルの応用力や、問われた内容を適切に表現する能力を問う問題が含まれます。基礎を固めた上で、応用問題にも積極的に取り組む必要があります。</p>
-                        </div>
-                         <div class="bg-slate-100 p-4 rounded-lg">
-                            <h4 class="font-bold text-lg">C問題 (発展)</h4>
-                            <p class="text-sm text-gray-700 mt-1">高度な思考力、判断力、表現力が問われる発展的な問題で構成されます。特に英語のC問題は、指示文を含め全て英語で記述されており、リスニングテストでは「読む」「聴く」「話す」の総合的な運用能力が問われます。</p>
-                        </div>
-                    </div>
-                     <p class="mt-6 text-sm text-center text-gray-500">※高校・学科によって採用する問題のタイプが異なります。志望校の情報を必ず確認してください。</p>
-                </div>
-                <div id="tab-content-sub" class="hidden">
-                     <h3 class="text-xl font-bold text-center mb-6">共通問題で実施される2教科</h3>
-                    <div class="grid sm:grid-cols-2 gap-6">
-                        <div class="bg-slate-100 p-4 rounded-lg">
-                            <h4 class="font-bold text-lg">理科</h4>
-                            <p class="text-sm text-gray-700 mt-1">小問集合がなく、生物・物理・化学・地学の4分野から均等に出題されます。問題は生徒が行った実験という形式で進むことが多く、実験図の読解や計算問題が重要です。単なる知識の暗記ではなく、科学的思考力が評価されます。「状態変化・気体」や「地震・火山」が出やすい傾向にあります。</p>
-                            <h5 class="font-bold text-md mt-3">対策</h5>
-                            <ul class="list-disc list-inside text-sm text-gray-700">
-                                <li>自分の得意な分野から解き始めるなど、効率的な解答順序を確立する。</li>
-                                <li>実験レポート形式の問題では、問題文を読み飛ばさずに、図やグラフ、実験手順をしっかりと読み込む。</li>
-                                <li>「水とエタノールの混合物を加熱する実験」や「気体の性質」、「地震の波のグラフの読み取り」、「火山の種類とその特徴」を重点的に学習する。</li>
-                                <li>地震の波のグラフの読み取り方、初期微動継続時間、地震の波の速さ、震源からの距離の求め方を習得する。</li>
-                            </ul>
-                        </div>
-                        <div class="bg-slate-100 p-4 rounded-lg">
-                            <h4 class="font-bold text-lg">社会</h4>
-                            <p class="text-sm text-gray-700 mt-1">地理・歴史・公民の複合問題が多く、資料読解力や記述力が求められます。時事問題やグラフ読み取り問題が頻出で、歴史分野では年代の縦の流れと、同じ時期の他国の動きも問われます。公民分野の割合が最も高いです。</p>
-                            <h5 class="font-bold text-md mt-3">対策</h5>
-                            <ul class="list-disc list-inside text-sm text-gray-700">
-                                <li>資料の読み取りや記述問題を繰り返し解き、慣れる。</li>
-                                <li>歴史は、単なる暗記ではなく、出来事の背景や関連性を理解する総合的な学習を行う。</li>
-                                <li>公民は出題割合が最も高いため、重点的に学習し得点源とする。</li>
-                                <li>時事問題対策として、日頃から新聞やニュースに目を通し、社会の動きに関心を持つ。</li>
-                                <li>グラフ問題は、与えられた情報から正確に読み取る練習を重ねる。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-content-eiken" class="hidden">
-                    <h3 class="text-xl font-bold text-center mb-6">英語外部検定の活用</h3>
-                    <p class="text-center text-sm text-gray-600 mb-4">英語の学力検査において、外部検定（英検、TOEFL iBT, IELTSなど）のスコアを学力検査の成績として読み替えることができます。スコア等に応じた読み替え率が定められており、換算した点数と英語の学力検査の点数を比較し、高い方が学力検査の成績として採用されます。この制度は、生徒が中学校段階から体系的に英語学習に取り組み、実用的な英語力を身につけることへの強い政策的動機付けとなります。</p>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white border">
-                            <thead class="bg-teal-600 text-white">
-                                <tr>
-                                    <th class="py-2 px-4 text-left">検定種類</th>
-                                    <th class="py-2 px-4 text-left">級/スコア</th>
-                                    <th class="py-2 px-4 text-left">読み替え率</th>
-                                    <th class="py-2 px-4 text-left">換算点 (90点満点)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-gray-700">
-                                <tr class="border-b">
-                                    <td class="py-2 px-4 font-medium" rowspan="2">実用英語技能検定 (英検®)</td>
-                                    <td class="py-2 px-4">準1級・1級</td>
-                                    <td class="py-2 px-4">100%</td>
-                                    <td class="py-2 px-4 font-bold">90点</td>
-                                </tr>
-                                <tr class="border-b bg-slate-50">
-                                    <td class="py-2 px-4">2級</td>
-                                    <td class="py-2 px-4">80%</td>
-                                    <td class="py-2 px-4 font-bold">72点</td>
-                                </tr>
-                                <tr class="border-b">
-                                     <td class="py-2 px-4 font-medium">TOEFL iBT®</td>
-                                     <td class="py-2 px-4">（スコアによる）</td>
-                                     <td class="py-2 px-4">100% / 80%</td>
-                                     <td class="py-2 px-4">90点 / 72点</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                     <p class="mt-4 text-xs text-center text-gray-500">※上記は一例です。詳細は必ず大阪府教育委員会の発表をご確認ください。</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="schedule" class="scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-10">令和7年度 入試日程</h2>
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="border-b-2 border-gray-200">
-                        <tr>
-                            <th class="py-3 px-4 font-bold">選抜方式</th>
-                            <th class="py-3 px-4 font-bold">出願期間</th>
-                            <th class="py-3 px-4 font-bold">検査日</th>
-                            <th class="py-3 px-4 font-bold">合格発表日</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b">
-                            <td class="py-4 px-4 font-medium text-teal-700">特別入学者選抜</td>
-                            <td class="py-4 px-4">2/14(金)～17(月)</td>
-                            <td class="py-4 px-4">2/20(木)・21(金)</td>
-                            <td class="py-4 px-4">3/3(月)</td>
-                        </tr>
-                         <tr class="bg-slate-50 border-b">
-                            <td class="py-4 px-4 font-medium text-teal-700">一般入学者選抜</td>
-                            <td class="py-4 px-4">3/5(水)～7(金)</td>
-                            <td class="py-4 px-4">3/12(水)</td>
-                            <td class="py-4 px-4">3/21(金)</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-4 font-medium text-teal-700">二次試験</td>
-                            <td class="py-4 px-4">3/25(火)</td>
-                            <td class="py-4 px-4">3/26(水) (面接)</td>
-                            <td class="py-4 px-4">3/27(木)</td>
-                        </tr>
-                    </tbody>
-                </table>
-                 <p class="mt-4 text-xs text-center text-gray-500">※音楽科など一部学科は日程が異なります。詳細は必ず大阪府教育委員会の発表をご確認ください。</p>
-            </div>
-        </section>
-
-        <section id="strategy" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-4">入試対策と今後の展望</h2>
-            <p class="text-center text-gray-600 mb-10">大阪府の公立高校入試は複雑ですが、適切な対策で合格に近づけます。</p>
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-xl font-bold mb-4">過去問を活用した効果的な学習法</h3>
-                        <p class="text-gray-700 mb-3">過去問は、入試の出題傾向、問題形式、難易度を具体的に把握するための最も効果的な学習ツールです。特に国語の漢字の「書き取り」と「読み」など、毎年出題される傾向のある分野は、過去問を通じて集中的に対策することで得点源とすることができます。</p>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2">
-                            <li>過去問を解くことで、自身の得意分野と苦手分野を明確にし、試験日までに苦手な点に集中的に対策を講じる。</li>
-                            <li>過去問題集は市販されており、オンラインでも入手可能。</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold mb-4">最新情報の確認と個別相談の推奨</h3>
-                        <p class="text-gray-700 mb-3">入試制度や日程、各高校の選抜方式、問題タイプなどは変更される可能性があるため、常に大阪府教育委員会や各高校の公式ウェブサイトで最新情報を確認することが不可欠です。</p>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2">
-                            <li>内申点や当日点の合格ラインは年度ごとの受験者層や倍率、問題の難易度によって変動する可能性がある。公開されている「合格ライン」はあくまで安全圏の目安として捉える。</li>
-                            <li>複雑な入試制度を正確に理解し、自身の学力や特性に合わせた最適な学習計画や志望校選定を行うためには、個別相談や学習塾の専門的なサポートを活用することも非常に有効。</li>
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold text-[#03045E] mb-3">学年別評定の比率：2 : 2 : 6</h3>
+                        <p class="mb-4">グラフが示す通り、中学1・2年生の評定に対し、中学3年生の評定は<strong class="text-[#0077B6] text-xl">3倍</strong>の重みで計算されます。この中3重視のルールは、生徒に最後まで努力し続けることの重要性を伝える強力な根拠となります。</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong class="text-[#03045E]">指導の核心:</strong> 中3の定期テスト対策、提出物の徹底、授業態度が合否に直結することを伝えましょう。</li>
+                            <li><strong class="text-[#03045E]">モチベーション向上:</b> 中3からでも逆転は可能という前向きなメッセージで生徒を鼓舞できます。</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="conclusion" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-center mb-4">まとめ</h2>
-            <p class="text-center text-gray-600 mb-10">大阪府の公立高校入試は、生徒一人ひとりの多様な個性と学力を総合的に評価するために、緻密に設計された制度です。</p>
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg text-gray-700">
-                <ul class="list-disc list-inside space-y-3">
-                    <li>**内申点**: 中学1年生から評価対象となり、特に中学3年生の評定が合否に大きく影響します。日々の学習と提出物が重要です。</li>
-                    <li>**学力検査問題のタイプ**: 国語・数学・英語はA・B・Cの3タイプに分かれ、志望校によって選択問題が異なります。理科・社会は共通問題です。</li>
-                    <li>**比率タイプ（I～V型）**: 学力検査と内申点の比重が高校ごとに異なり、自身の得意分野に合わせて戦略的に学校を選ぶことが重要です。</li>
-                    <li>**自己申告書**: ボーダーゾーンの合否判定において、学力以外の側面も合否を左右する重要な要素となります。</li>
-                    <li>**英語外部検定**: 英検などのスコアを英語の学力検査に換算できる制度があり、活用を検討することで有利になる可能性があります。</li>
+        <!-- 内申点の計算方法セクション -->
+        <section id="naishin-calculation" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">内申点の計算方法</h2>
+                <p class="text-base md:text-lg mb-6">大阪府の公立高校入試における内申点は、各学年の評定に特定の重み付けをして計算されます。その仕組みを理解し、日々の学習に活かすことが重要です。</p>
+                <div class="space-y-6">
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg text-[#03045E] mb-2">1. 各学年の評定の合計</h3>
+                        <p class="math-text">中学校の通知表に記載される各教科の評定（5段階評価）を使用します。主要5教科（国語、数学、英語、理科、社会）と実技4教科（音楽、美術、保健体育、技術・家庭）の計9教科が対象です。</p>
+                        <p class="mt-2 font-semibold text-2xl sm:text-3xl text-[#0077B6]">各学年9教科の満点: 5点 × 9教科 = 45点</p>
+                    </div>
+                    <div class="text-center text-3xl text-[#0077B6]">▼</div>
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg text-[#03045E] mb-2">2. 学年ごとの重み付け</h3>
+                        <p class="math-text">中学1年生、中学2年生、中学3年生の評定にそれぞれ重みがかけられます。</p>
+                        <p class="mt-2 font-semibold text-2xl sm:text-3xl text-[#0077B6]">比率: 中学1年生 : 中学2年生 : 中学3年生 ＝ 2 : 2 : 6</p>
+                        <ul class="list-disc list-inside math-text mt-2 ml-4">
+                            <li>中学1年生の評定合計: <span class="font-semibold text-2xl sm:text-3xl text-[#0077B6]">45点 × 2 = 90点</span></li>
+                            <li>中学2年生の評定合計: <span class="font-semibold text-2xl sm:text-3xl text-[#0077B6]">45点 × 2 = 90点</span></li>
+                            <li>中学3年生の評定合計: <span class="font-semibold text-2xl sm:text-3xl text-[#0077B6]">45点 × 6 = 270点</span></li>
+                        </ul>
+                    </div>
+                    <div class="text-center text-3xl text-[#0077B6]">▼</div>
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg text-[#03045E] mb-2">3. 内申点の最終合計（450点満点）</h3>
+                        <p class="math-text">上記を合計すると、内申点の満点は450点となります。</p>
+                        <p class="mt-2 font-semibold text-2xl sm:text-3xl text-[#0077B6]">合計: 90 + 90 + 270 = 450点</p>
+                    </div>
+                    <div class="text-center text-3xl text-[#0077B6]">▼</div>
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg text-[#03045E] mb-2">4. 最終的な内申点の調整（450点満点）</h3>
+                        <p class="math-text">合否判定に用いられる内申点は、学力検査の満点（5教科 × 90点 = 450点）と同じく 450点満点 となります。</p>
+                        <p class="mt-2 font-semibold text-2xl sm:text-3xl text-[#0077B6]">最終内申点満点: 450点</p>
+                    </div>
+                    <div class="text-center text-3xl text-[#0077B6]">▼</div>
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg text-[#03045E] mb-2">5. 最終的な総合点の算出（900点満点）</h3>
+                        <p class="math-text">学力検査と内申点（調査書評定）は、各高校が設定する「比重タイプ」（Ⅰ～Ⅴ型）に応じて係数がかけられ、900点満点の総合点として算出されます。内申点（450点満点）が各比重タイプにおいて、最終的に何点満点として扱われるかは以下の通りです。</p>
+                        <div class="overflow-x-auto rounded-lg shadow-md mt-4">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-[#0077B6] text-white">
+                                        <th class="p-3 font-bold uppercase whitespace-nowrap">比重タイプ</th>
+                                        <th class="p-3 font-bold uppercase">学力検査：調査書</th>
+                                        <th class="p-3 font-bold uppercase whitespace-nowrap">内申点 (450点満点) が最終的に扱われる満点</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-3 font-bold text-[#03045E]">Ⅰ型</td>
+                                        <td class="p-3">7：3</td>
+                                        <td class="p-3">270点</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 bg-gray-100">
+                                        <td class="p-3 font-bold text-[#03045E]">Ⅱ型</td>
+                                        <td class="p-3">6：4</td>
+                                        <td class="p-3">360点</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-3 font-bold text-[#03045E]">Ⅲ型</td>
+                                        <td class="p-3">5：5</td>
+                                        <td class="p-3">450点</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 bg-gray-100">
+                                        <td class="p-3 font-bold text-[#03045E]">Ⅳ型</td>
+                                        <td class="p-3">4：6</td>
+                                        <td class="p-3">540点</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-3 font-bold text-[#03045E]">Ⅴ型</td>
+                                        <td class="p-3">3：7</td>
+                                        <td class="p-3">630点</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="text-center text-3xl text-[#0077B6]">▼</div>
+                    <div class="p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-lg">
+                        <h3 class="font-bold text-lg text-[#03045E] mb-2">6. 学力検査との合計による合否判定</h3>
+                        <p class="math-text">最終的な合否判定は、「学力検査の成績」と「内申点（調査書評定）」を合計した総合点で行われます。この際、各高校が設定する「比重タイプ」（例：学力検査7：内申点3など）に応じて、それぞれに係数がかけられ、900点満点で計算されます。</p>
+                        <p class="math-text mt-2 font-semibold">重要ポイント: 最も重要なのは「中学3年生の評定」です。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学力検査：A/B/C問題と比重タイプセクション -->
+        <section id="test-types" class="mb-12 scroll-mt-[6.5rem]">
+             <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">学力検査：A/B/C問題と比重タイプ</h2>
+                <p class="text-base md:text-lg mb-6">学力検査は、国語・数学・英語で難易度の異なる3種類の問題（A:基礎/B:標準/C:発展）から高校が選択します。これと、学力検査と内申点の評価比率（比重タイプ）の組み合わせが、志望校選びの重要な鍵となります。</p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="flex flex-col">
+                        <h3 class="text-xl font-bold text-[#03045E] mb-4 text-center">学力検査 vs 調査書 比重タイプ</h3>
+                        <p class="text-sm text-center mb-4">高校が当日の学力と日々の努力のどちらを重視しているかを示します。タイプⅠは学力重視、タイプⅤは内申重視です。</p>
+                        <div class="chart-container flex-grow">
+                            <canvas id="weightTypeChart"></canvas>
+                        </div>
+                    </div>
+                     <div class="flex flex-col">
+                        <h3 class="text-xl font-bold text-[#03045E] mb-4 text-center">英語外部資格の活用</h3>
+                        <p class="text-sm text-center mb-4">英検®などの資格は点数保障として利用できます。当日の得点と比較し、高い方が採用される有利な制度です。</p>
+                        <div class="chart-container flex-grow">
+                            <canvas id="eikenChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center mt-2 text-gray-500">※英検®は、公益財団法人 日本英語検定協会の登録商標です。</p>
+                    </div>
+                </div>
+                <div class="mt-8 p-4 bg-blue-50 rounded-lg">
+                     <h3 class="text-xl font-bold text-[#03045E] mb-2 text-center">C問題採択校の存在</h3>
+                    <p class="text-center text-lg mb-4">進学校を中心に、高難易度の「C問題」を採択する高校があります。2024年度入試では、<strong class="text-4xl sm:text-5xl font-bold text-[#0077B6]">26</strong>校が1教科以上でC問題を出題しました。C問題対策は専門的な指導が必須であり、塾の価値が最も発揮される領域です。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 高槻エリア主要高校の学力検査問題と内申点比重タイプセクション (移動) -->
+        <section id="school-data-list" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">高槻エリア主要高校の学力検査問題と内申点比重タイプ</h2>
+                <p class="text-base md:text-lg mb-6">高槻市およびその周辺エリアにある主要な公立高校における国語・数学・英語の学力検査問題のタイプ（A/B/C）と、学力検査と調査書（内申点）の比重タイプ（I～V型）を一覧で示します。これらの情報は、過去の入試傾向に基づくものであり、<strong class="text-red-600">毎年7月頃に大阪府教育委員会から発表される最新情報で変更される可能性があります</strong>ので、必ず最新の情報を確認してください。</p>
+                <div class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#0077B6] text-white">
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">高校名</th>
+                                <th class="p-3 font-bold uppercase">国語</th>
+                                <th class="p-3 font-bold uppercase">数学</th>
+                                <th class="p-3 font-bold uppercase">英語</th>
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">比重タイプ</th>
+                                <th class="p-3 font-bold uppercase">偏差値</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <!-- 公立高校のデータ（偏差値順） -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">春日丘</td>
+                                <td class="p-3">Ｃ</td>
+                                <td class="p-3">Ｃ</td>
+                                <td class="p-3">Ｃ</td>
+                                <td class="p-3">Ⅰ型 (7:3)</td>
+                                <td class="p-3">68-69</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">三島</td>
+                                <td class="p-3">Ｃ</td>
+                                <td class="p-3">Ｃ</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">Ⅰ型 (7:3)</td>
+                                <td class="p-3">63-64</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">槻の木</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">Ⅰ型 (7:3)</td>
+                                <td class="p-3">59</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">高槻北</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">Ⅱ型 (6:4)</td>
+                                <td class="p-3">54</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">芥川</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">Ⅱ型 (6:4)</td>
+                                <td class="p-3">50</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大冠</td>
+                                <td class="p-3">A</td>
+                                <td class="p-3">A</td>
+                                <td class="p-3">A</td>
+                                <td class="p-3">情報なし</td>
+                                <td class="p-3">42-46</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">阿武野</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">A</td>
+                                <td class="p-3">A</td>
+                                <td class="p-3">Ⅱ型 (6:4)</td>
+                                <td class="p-3">情報なし</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">島本</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">Ⅱ型 (6:4)</td>
+                                <td class="p-3">情報なし</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 学力検査：各問題タイプ別対策の深掘りセクション -->
+        <section id="exam-details" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">学力検査：各問題タイプ別対策の深掘り</h2>
+                <p class="text-base md:text-lg mb-6">国語・数学・英語の3教科で出題されるA・B・C問題は、それぞれ異なる難易度と出題傾向を持ちます。生徒の志望校の出題傾向を把握し、的確な対策を講じることが合格への鍵となります。また、理科・社会は共通問題が出題されます。</p>
+                <div class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#0077B6] text-white">
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">問題タイプ</th>
+                                <th class="p-3 font-bold uppercase">難易度</th>
+                                <th class="p-3 font-bold uppercase">出題傾向</th>
+                                <th class="p-3 font-bold uppercase">対策のポイント</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">A問題</td>
+                                <td class="p-3">基礎的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">国語:</strong> 教科書レベルの基本的な文章理解、漢字・語句の知識。</li>
+                                        <li><strong class="font-semibold">数学:</strong> 教科書の基本例題、公式・計算方法の直接的な理解と適用。</li>
+                                        <li><strong class="font-semibold">英語:</strong> 教科書に準拠した基礎的な単語・文法、短い英文の読解。リスニングも基礎的。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">基礎の徹底:</strong> 各教科の基本事項を確実に定着させる。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">ケアレスミス防止:</b> 計算や読み間違いなど、凡ミスをなくすための反復練習。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">時間配分:</b> 基礎問題で時間をかけすぎない練習。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">B問題</td>
+                                <td class="p-3">標準的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">国語:</strong> A問題よりやや長文化・複雑化した文章読解。記述問題や作文の比重も増加。</li>
+                                        <li><strong class="font-semibold">数学:</b> 基本の組み合わせや応用を問う問題（関数、図形、確率）。ひねりのある問題も出題。</li>
+                                        <li><strong class="font-semibold">英語:</b> 単語・文法の知識を前提とした中程度の長文読解（500～600語程度）。内容理解だけでなく、推測力も問われる。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">応用力養成:</b> 基礎知識を組み合わせて問題を解く練習。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">過去問演習:</b> 実際の出題形式に慣れ、時間内で解ききる力を養う。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">記述・作文対策:</b> 自分の考えを論理的にまとめる練習。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">C問題</td>
+                                <td class="p-3">発展的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">国語:</strong> 評論文や現代文の長文が多く、難解な語句も登場。内容を深く理解し、論理的に記述する力が必要。</li>
+                                        <li><strong class="font-semibold">数学:</strong> 教科書レベルを大きく超える思考力・応用力を問う問題。複雑な図形問題や複数分野融合問題。</li>
+                                        <li><strong class="font-semibold">英語:</b> 問題文含め全て英語。非常に長い長文（800語以上）で、速読力・精読力・深い内容理解が必須。自由度が高い英作文も。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">専門的な対策:</strong> 塾でのC問題対策講座や難易度の高い問題集の活用。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">記述力強化:</b> 国語・英語の記述問題、英作文で高得点を目指すための添削指導。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">速読・多読:</b> 長文に慣れ、素早く正確に情報を読み取る練習。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">得点戦略:</b> 満点を目指すのではなく、取れる問題を確実に取る戦略が重要。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">理科 (共通問題)</td>
+                                <td class="p-3">標準的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">教科書全般からの出題:</strong> 基礎知識の定着と応用力が問われる。</li>
+                                        <li><strong class="font-semibold">実験・観察に関する問題:</strong> 実験器具の名称や操作、結果の考察、グラフの読み取りなどが頻出。</li>
+                                        <li><strong class="font-semibold">計算問題:</strong> 物理・化学分野を中心に計算力を要する問題が出題される。</li>
+                                        <li><strong class="font-semibold">単元融合問題:</strong> 複数の単元知識を組み合わせた問題が見られる。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">用語の正確な暗記と理解:</strong> 基礎知識を確実に定着させる。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">実験の目的・方法・結果・考察の理解:</b> 教科書の実験や観察を深く理解し、考察力を養う。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">計算問題の反復練習:</strong> 特に苦手な分野の計算問題は徹底的に練習する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">過去問演習:</b> 共通問題の形式に慣れ、図やグラフを用いた問題の読み取りと解答に慣れる。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">社会 (共通問題)</td>
+                                <td class="p-3">標準的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">地理・歴史・公民の各分野から満遍なく出題:</strong> 幅広い知識が求められる。</li>
+                                        <li><strong class="font-semibold">資料読み取り問題:</strong> 地図、グラフ、統計、年表などの資料を正確に読み取る問題が多い。</li>
+                                        <li><strong class="font-semibold">複数分野を横断した思考力:</strong> 歴史的背景と地理的要因を関連付けたり、公民の知識を時事問題に当てはめたりする問題。</li>
+                                        <li><strong class="font-semibold">時事問題との関連付け:</strong> 近年発生した出来事や社会問題と関連付けた出題が見られることがある。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">基礎知識の定着:</strong> 各分野の重要用語や概念を正確に覚える。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">歴史の「流れ」の理解:</strong> 年号や出来事の暗記だけでなく、時代の背景や因果関係を理解する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">地理の「関連性」の理解:</strong> 気候、地形、産業、文化などの地域ごとの関連性を理解する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">公民の「仕組み」と「課題」の理解:</strong> 政治・経済・社会の仕組みと、現代社会の課題について深く理解する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">資料問題演習:</strong> 資料から必要な情報を抽出し、分析する練習を徹底する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">時事問題への関心:</strong> 日頃からニュースや新聞に触れ、社会の動きに関心を持つ。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主要5科目 単元概要セクション -->
+        <section id="curriculum-overview" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">主要5科目 単元概要</h2>
+                <p class="text-base md:text-lg mb-6">ここでは、中学校で学習する主要5科目（国語、数学、理科、社会、英語）の主要な単元を学年別にまとめています。各単元の内容と公立高校入試における重要度（★☆☆☆☆：低 〜 ★★★★★：高）を参考に、学習計画を立てましょう。</p>
+                
+                <div class="flex flex-wrap justify-center border-b border-gray-200 mb-4">
+                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade1')">中学1年生</button>
+                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade2')">中学2年生</button>
+                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade3')">中学3年生</button>
+                </div>
+
+                <!-- 中学1年生の単元内容 -->
+                <div id="grade1" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学1年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>説明的文章の読解</strong>: 論理の把握、要点理解 (★★★☆☆)</li>
+                                <li><strong>文学的文章の読解</strong>: 登場人物の心情、表現技法 (★★★★☆)</li>
+                                <li><strong>漢字・語句</strong>: 読み書き、意味 (★★★★☆)</li>
+                                <li><strong>文法</strong>: 品詞、文の成分 (★★★☆☆)</li>
+                                <li><strong>作文</strong>: 構成、表現 (★★★☆☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学1年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>正の数・負の数</strong>: 加減乗除、四則計算、指数 (★★★★☆)</li>
+                                <li><strong>文字と式</strong>: 文字式の計算、式の値、数量の関係を式で表現 (★★★★☆)</li>
+                                <li><strong>方程式</strong>: 一次方程式の解き方、応用問題 (★★★★☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>比例と反比例</strong>: 概念、グラフ、式、活用 (★★★★☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>平面図形</strong>: 作図、対称移動、多角形 (★★★☆☆)</li>
+                                <li><strong>空間図形</strong>: 立体の見方、表面積、体積 (★★★☆☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>資料の活用</strong>: 度数分布表、ヒストグラム、代表値 (★★☆☆☆)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学1年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>植物の生活と種類</strong>: 光合成、分類 (★★★☆☆)</li>
+                                <li><strong>身の回りの物質</strong>: 状態変化、密度、気体の性質 (★★★☆☆)</li>
+                                <li><strong>光・音・力</strong>: 光の屈折・反射、音の伝わり方、圧力 (★★★☆☆)</li>
+                                <li><strong>大地の変化</strong>: 地震、火山、岩石 (★★☆☆☆)</li>
+                                <li><strong>身近な生物の観察</strong>: 顕微鏡、スケッチ (★★☆☆☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学1年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>世界の様々な地域</strong>: 気候、地形、産業、文化 (★★★☆☆)</li>
+                                <li><strong>日本の様々な地域</strong>: 地形、産業、人口 (★★★☆☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>古代文明と日本</strong>: 旧石器～古墳時代 (★★☆☆☆)</li>
+                                <li><strong>飛鳥・奈良・平安時代</strong>: 律令国家、平安文化 (★★★☆☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学1年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>基本動詞</strong>: be動詞・一般動詞の現在形、過去形 (★★★★★)</li>
+                                <li><strong>文の種類</strong>: 肯定文・否定文・疑問文、命令文、There is/are (★★★★☆)</li>
+                                <li><strong>助動詞</strong>: can (能力・許可) (★★★★☆)</li>
+                                <li><strong>時制</strong>: 現在進行形 (★★★★☆)</li>
+                                <li><strong>基本語彙・表現</strong>: アルファベット、あいさつ、自己紹介、簡単な疑問詞 (★★★★☆)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中学2年生の単元内容 -->
+                <div id="grade2" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学2年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>説明的文章の読解</strong>: 筆者の主張、根拠 (★★★★☆)</li>
+                                <li><strong>文学的文章の読解</strong>: 情景描写、心情変化 (★★★★☆)</li>
+                                <li><strong>古典</strong>: 古文・漢文の基礎 (★★★☆☆)</li>
+                                <li><strong>漢字・語句</strong>: 読み書き、意味 (★★★★☆)</li>
+                                <li><strong>文法</strong>: 動詞・形容詞の活用、助動詞・助詞 (★★★☆☆)</li>
+                                <li><strong>作文</strong>: 意見文、構成 (★★★☆☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学2年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>式の計算</strong>: 多項式の加減乗除、分配法則、指数法則 (★★★★★)</li>
+                                <li><strong>連立方程式</strong>: 解き方（加減法・代入法）、応用問題 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>一次関数</strong>: グラフ、変化の割合、式、応用問題 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>図形の性質と合同</strong>: 平行線、多角形、合同条件、証明 (★★★★★)</li>
+                                <li><strong>平行と合同</strong>: 四角形の性質、中点連結定理 (★★★★☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>確率</strong>: 確率の求め方、場合の数、独立試行 (★★★★☆)</li>
+                                <li><strong>データの活用</strong>: 累積度数、箱ひげ図、四分位数 (★★☆☆☆)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学2年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>化学変化と原子・分子</strong>: 物質の分解・化合、原子・分子、化学式、化学反応式 (★★★★☆)</li>
+                                <li><strong>電流と回路</strong>: オームの法則、電力、電磁誘導 (★★★★☆)</li>
+                                <li><strong>動物の生活と細胞</strong>: 消化、呼吸、循環、排出、細胞 (★★★☆☆)</li>
+                                <li><strong>気象</strong>: 気圧、風、雲、天気 (★★★☆☆)</li>
+                                <li><strong>地震と火山</strong>: 地震の揺れ、火山活動 (★★★☆☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学2年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>世界と日本の地域差</strong>: 産業構造、貿易、交通 (★★★★☆)</li>
+                                <li><strong>世界の諸問題</strong>: 環境問題、貧困、紛争 (★★★☆☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>中世の日本</strong>: 武士の時代、室町文化 (★★★★☆)</li>
+                                <li><strong>近世の日本</strong>: 江戸幕府、開国 (★★★★☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学2年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>比較</strong>: 比較級・最上級、as ~ as (★★★★★)</li>
+                                <li><strong>時制:</strong> 未来形 (be going to/will)、現在完了形 (継続・経験・完了) (★★★★★)</li>
+                                <li><strong>助動詞:</strong> must, should, have to, may, might, could (★★★★☆)</li>
+                                <li><strong>動詞の形:</strong> 不定詞 (名詞・形容詞・副詞的用法)、動名詞 (★★★★★)</li>
+                                <li><strong>受動態:</strong> be動詞 + 過去分詞、byを使った表現 (★★★★★)</li>
+                                <li><strong>接続詞:</strong> 時・条件・理由・目的を表す接続詞 (★★★★☆)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中学3年生の単元内容 -->
+                <div id="grade3" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学3年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>説明的文章の読解</strong>: 批評文、論説文、要約 (★★★★☆)</li>
+                                <li><strong>文学的文章の読解</strong>: 詩、短歌、俳句、小説 (★★★★☆)</li>
+                                <li><strong>古典</strong>: 古文・漢文の発展 (★★★★☆)</li>
+                                <li><strong>漢字・語句</strong>: 難易度高めの熟語、慣用句 (★★★★☆)</li>
+                                <li><strong>作文</strong>: 小論文、意見主張 (★★★★★)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学3年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>多項式</strong>: 乗法公式、因数分解 (★★★★★)</li>
+                                <li><strong>平方根</strong>: 計算、有理化、近似値 (★★★★★)</li>
+                                <li><strong>二次方程式</strong>: 解き方（解の公式、因数分解）、応用問題 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>二次関数</strong>: $y=ax^2$のグラフ、変域、変化の割合、応用問題 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>図形の相似</strong>: 相似条件、相似比、面積比、体積比、平行線と線分の比 (★★★★★)</li>
+                                <li><strong>円の性質</strong>: 円周角の定理、接線 (★★★★★)</li>
+                                <li><strong>三平方の定理</strong>: 辺の長さ、座標、空間図形への応用 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>標本調査</strong>: 概念、無作為抽出 (★★★☆☆)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学3年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>細胞と生殖</strong>: 細胞分裂、遺伝、生物の多様性 (★★★★☆)</li>
+                                <li><strong>力の働きと運動</strong>: 運動の法則、仕事、エネルギー保存 (★★★★☆)</li>
+                                <li><strong>化学変化とイオン</strong>: 酸・アルカリ、中和、電池、電気分解 (★★★★★)</li>
+                                <li><strong>地球と宇宙</strong>: 天体の動き、太陽系、恒星 (★★★★☆)</li>
+                                <li><strong>生命の連続性</strong>: 生態系、環境保全 (★★★☆☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学3年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>地理総合</strong>: 地域の特色、世界の諸地域（現代の課題と関連） (★★★★☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>近代の日本</strong>: 明治維新、帝国主義、日清・日露戦争 (★★★★★)</li>
+                                <li><strong>現代の日本と世界</strong>: 第一次・第二次世界大戦、戦後、国際社会 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 公民</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>私たちと社会生活</strong>: 社会集団、きまり、規範 (★★☆☆☆)</li>
+                                <li><strong>日本の政治</strong>: 憲法、国会、内閣、裁判所 (★★★☆☆)</li>
+                                <li><strong>経済</strong>: 経済の仕組み、市場経済、財政 (★★★★☆)</li>
+                                <li><strong>国際社会</strong>: 国際連合、国際協力、地球市民 (★★★★☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学3年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>修飾</strong>: 分詞の形容詞的用法、関係代名詞 (★★★★★)</li>
+                                <li><strong>複雑な文</strong>: 間接疑問文、現在完了進行形、仮定法 (★★★★★)</li>
+                                <li><strong>付加疑問文</strong>: 肯定文・否定文への付加疑問 (★★★★☆)</li>
+                                <li><strong>話法</strong>: 間接話法 (★★★★☆)</li>
+                                <li><strong>動詞の形:</strong> 原型不定詞、不定詞の応用 (too ~ to..., ~ enough to...) (★★★★☆)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 追加リンク -->
+                <div class="mt-6 text-center">
+                    <p class="text-base text-gray-700">さらに詳しい科目情報はこちらで確認できます:</p>
+                    <a href="https://kyomujunior.netlify.app/" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mt-2">
+                        詳細な科目情報を見る
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 私立高校併願戦略のいまセクション -->
+        <section id="shiritsu" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                 <h2 class="text-2xl font-bold section-title pb-2 mb-4">私立高校併願戦略のいま</h2>
+                 <p class="text-base md:text-lg mb-6">公立第一志望の生徒にとっても、私立高校の併願は常識です。近年は授業料無償化制度の拡充により、その位置づけが滑り止めから魅力的な選択肢へと変化しています。このトレンドを理解することが、的確な進路指導に繋がります。</p>
+                 
+                 <div class="p-4 mb-6 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-lg">
+                    <h3 class="font-bold text-xl mb-2">💡 私立高等学校等授業料無償化制度の影響</h3>
+                    <p class="text-base">大阪府では、国の制度に加え、独自の授業料支援制度を設けており、一定の所得要件を満たす世帯の生徒は、私立高校の授業料が実質無償となる場合があります。これにより、経済的な理由で私立高校を諦めていた生徒も、多様な選択肢を検討できるようになりました。特待生制度と組み合わせることで、さらに手厚い支援を受けられる場合もあります。</p>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-lg bg-gray-100">
+                        <h3 class="font-bold text-lg text-[#03045E]">受験戦略の変化</h3>
+                        <p class="mt-2">公立トップ校が無理なら、手厚い私立上位校へという安全志向が強まっています。これは、公立二番手校と私立上位校が競合するようになったことを意味します。</p>
+                        <div class="mt-4 text-3xl text-center">🤔 🆚 😄</div>
+                    </div>
+                    <div class="p-6 rounded-lg bg-gray-100">
+                        <h3 class="font-bold text-lg text-[#03045E]">私立高校の魅力</h3>
+                         <ul class="list-disc list-inside space-y-1 mt-2">
+                             <li>充実したICT教育・施設</li>
+                             <li>豊富な指定校推薦枠</li>
+                             <li>手厚い学習サポート</li>
+                             <li>魅力的な特待生制度</li>
+                             <li>多様なコース・カリキュラム</li>
+                         </ul>
+                    </div>
+                 </div>
+                 <div class="mt-6">
+                     <h3 class="text-xl font-bold text-[#03045E] mb-3 text-center section-title pb-2">高槻エリア主要私立高校 (併願参考)</h3>
+                     <p class="text-base mb-4 text-center">高槻エリアの生徒にとって併願先の選択肢となる主要な私立高校をいくつかご紹介します。<br>各高校の教育方針や進学実績を比較検討し、生徒のニーズに合った学校を見つけることが重要です。</p>
+                     <div class="grid grid-cols-1 gap-4">
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">関西大学高等部</h4>
+                             <p class="text-sm mt-1">関西大学への内部進学が強み。難関国公立大学を目指すコースも設置されています。<br><strong class="font-semibold">偏差値:</strong> 70前後</p>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">高槻高等学校</h4>
+                             <p class="text-sm mt-1">文武両道を掲げ、国公立・難関私立大学への高い進学実績を持つ進学校です。<br><strong class="font-semibold">偏差値:</strong> 70前後</p>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">大阪青凌高等学校</h4>
+                             <p class="text-sm mt-1">夢や目標、志望大学に応じた3つのコースを設置しています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進Sコース:</strong> 難関国公立大学の現役合格を目標とし、3年間5教科7科目のカリキュラムで指導。早期から応用力を鍛えるプログラムが充実。<strong class="font-semibold">(偏差値: 66)</strong></li>
+                                 <li><strong class="font-semibold">特進コース:</strong> 国公立大学・難関私立大学の現役合格を目標。1年次で基礎学力を強化し、2年次から文系・理系に細分化されたカリキュラムで実践力を養う.<strong class="font-semibold">(偏差値: 59)</strong></li>
+                                 <li><strong class="font-semibold">進学コース:</strong> 関関同立など有名私立大学の現役合格を目指す。2年次から文理に分かれ、3教科を中心に学習.<strong class="font-semibold">(偏差値: 49)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">金光大阪高等学校</h4>
+                             <p class="text-sm mt-1">着実にステップアップできる5つのコースを展開しています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進Iコース:</strong> 国公立・難関私立大学の現役合格を目標とする最上位コース。授業内容全てが受験対策につながるカリキュラム。<strong class="font-semibold">(偏差値: 58)</strong></li>
+                                 <li><strong class="font-semibold">特進IIコース:</b> 難関私立大学の現役合格を目標。2年次から文系3教科（国・英・社）の強化に注力し、志望校に応じた科目を選択.<strong class="font-semibold">(偏差値: 52)</strong></li>
+                                 <li><strong class="font-semibold">進学コース:</b> 有名私立大学の現役合格を目標。基礎学力の確立と、様々な大学入試スタイルに対応したカリキュラム.<strong class="font-semibold">(偏差値: 45)</strong></li>
+                                 <li><strong class="font-semibold">理系コース (2年次より):</strong> 理系科目に重点を置き、国公私立大学の理系学部への現役合格を目指す。</li>
+                                 <li><strong class="font-semibold">ロジカルスポーツコース（LSコース）(2年次より):</strong> 体育・スポーツに関する探究型授業を通し、社会で活かせる力を身につけながら有名私立大学への現役合格を目指す。</li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">大阪学院大学高等学校 (吹田市)</h4>
+                             <p class="text-sm mt-1">様々な進路に対応したコースが充実しています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進コース:</strong> 難関大学を目指すコース。<strong class="font-semibold">(偏差値: 53)</strong></li>
+                                 <li><strong class="font-semibold">国際コース:</strong> 英語力強化と国際理解を深めるコース。<strong class="font-semibold">(偏差値: 50)</strong></li>
+                                 <li><strong class="font-semibold">普通コース:</strong> 幅広い進路に対応するコース。<strong class="font-semibold">(偏差値: 46)</strong></li>
+                                 <li><strong class="font-semibold">スポーツ科学コース:</strong> スポーツと学業の両立を目指すコース。<strong class="font-semibold">(偏差値: 46)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">常翔学園高等学校 (大阪市旭区)</h4>
+                             <p class="text-sm mt-1">理系・文系に特化した多様なコースを展開し、きめ細やかな指導が特徴です。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進選抜コース:</strong> 難関国公立大学を目指すコース。<strong class="font-semibold">(偏差値: 60程度)</strong></li>
+                                 <li><strong class="font-semibold">特進コース:</strong> 国公立・難関私立大学を目指すコース.<strong class="font-semibold">(偏差値: 55程度)</strong></li>
+                                 <li><strong class="font-semibold">文理進学コース:</strong> 多様な進路に対応するコース。<strong class="font-semibold">(偏差値: 47-50程度)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">早稲田大阪高等学校 (茨木市)</h4>
+                             <p class="text-sm mt-1">早稲田大学への推薦枠を持つ点が大きな魅力の共学校です。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">普通科 (Bコース):</strong> 早稲田大学への推薦入学制度を持つコース。<strong class="font-semibold">(偏差値: 55-58程度)</strong></li>
+                                 <li><strong class="font-semibold">普通科 (Aコース):</strong> 他大学進学を目指すコース。<strong class="font-semibold">(偏差値: 50-53程度)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">京都橘高等学校 (京都)</h4>
+                             <p class="text-sm mt-1">高槻からアクセスしやすく、多様なコースを持つ共学校です。特に「吹奏楽部」が有名で、全国レベルの活動を行っています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">国公立難関コース:</strong> 難関国公立大学を目指すコース。<strong class="font-semibold">(偏差値: 65-66)</strong></li>
+                                 <li><strong class="font-semibold">特別進学コース:</b> 関関同立など有名私立大学を目指すコース.<strong class="font-semibold">(偏差値: 56)</strong></li>
+                                 <li><strong class="font-semibold">総合進学コース:</b> 多様な進路に対応し、基礎学力を固めるコース。<strong class="font-semibold">(偏差値: 50-51)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">龍谷大学付属平安高等学校 (京都)</h4>
+                             <p class="text-sm mt-1">龍谷大学への内部進学制度が充実しており、スポーツも盛んな共学校です。特進コースでは難関大学への進学も目指せます。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">選抜特進コース:</strong> 難関国公立・私立大学を目指すコース。<strong class="font-semibold">(偏差値: 61-62)</strong></li>
+                                 <li><strong class="font-semibold">プログレスコース:</strong> 龍谷大学進学を目指すコース.<strong class="font-semibold">(偏差値: 53-54)</strong></li>
+                                 <li><strong class="font-semibold">アスリートコース:</strong> スポーツ活動に力を入れながら、大学進学を目指すコース。<strong class="font-semibold">(偏差値: 42-43)</strong></li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="mt-6 text-center p-4 bg-[#CAF0F8] rounded-lg">
+                    <p class="font-bold text-[#03045E]">指導ポイント：単なる滑り止めではなく、生徒が通いたいと思える併願校を一緒に見つける視点も重要です。</p>
+                 </div>
+            </div>
+        </section>
+
+        <!-- 高槻エリア主要高校の所在地情報セクション -->
+        <section id="school-locations" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">高槻エリア主要高校の所在地情報とアクセス</h2>
+                <p class="text-base md:text-lg mb-6">高槻市およびその周辺エリアにある主要な公立・私立高校の所在地とJR高槻駅からのアクセス方法をまとめました。通学時間やアクセス方法を検討する際の参考にしてください。</p>
+                <div class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#0077B6] text-white">
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">高校名</th>
+                                <th class="p-3 font-bold uppercase">所在地</th>
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">JR高槻駅からのアクセス</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <!-- 公立高校のデータ -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立春日丘高等学校</td>
+                                <td class="p-3">〒567-0031 大阪府茨木市春日2-1-2</td>
+                                <td class="p-3">JR茨木駅まで電車 (約5分)、その後バス (約10分) または徒歩 (約20分)。<br>合計: 約20～30分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立三島高等学校</td>
+                                <td class="p-3">〒569-1135 大阪府高槻市今城町27-1</td>
+                                <td class="p-3">バス (JR高槻駅北側より約15分) または自転車 (約20分)。<br>合計: 約15～20分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立槻の木高等学校</td>
+                                <td class="p-3">〒569-0075 大阪府高槻市城内町2-13</td>
+                                <td class="p-3">徒歩 (約15分) または自転車 (約5分)。<br>合計: 約5～15分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立高槻北高等学校</td>
+                                <td class="p-3">〒569-1112 大阪府高槻市別所本町36-3</td>
+                                <td class="p-3">バス (JR高槻駅北側より約20分) または自転車 (約25分)。<br>合計: 約20～25分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立芥川高等学校</td>
+                                <td class="p-3">〒569-1027 大阪府高槻市浦堂1-12-1</td>
+                                <td class="p-3">バス (JR高槻駅北側より約15分) または自転車 (約20分)。<br>合計: 約15～20分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立大冠高等学校</td>
+                                <td class="p-3">〒569-0034 大阪府高槻市大塚町4-50-1</td>
+                                <td class="p-3">バス (JR高槻駅南側より約20分)。<br>合計: 約20分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立阿武野高等学校</td>
+                                <td class="p-3">〒569-1141 高槻市氷室町3丁目38番1号</td>
+                                <td class="p-3">バス (JR高槻駅北側より約20分) または自転車 (約25分)。<br>合計: 約20～25分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪府立島本高等学校</td>
+                                <td class="p-3">〒618-0023 大阪府三島郡島本町桜井台15-1</td>
+                                <td class="p-3">JR島本駅まで電車 (約3分)、その後徒歩 (約15分) または自転車 (約5分)。<br>合計: 約20～25分</td>
+                            </tr>
+                            <!-- 私立高校のデータ -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">関西大学高等部</td>
+                                <td class="p-3">〒569-1098 大阪府高槻市白梅町7番1号</td>
+                                <td class="p-3">徒歩 (約7分)。<br>合計: 約7分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">高槻高等学校</td>
+                                <td class="p-3">〒569-8505 大阪府高槻市沢良木町2-5</td>
+                                <td class="p-3">徒歩 (約10分)。<br>合計: 約10分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪青凌高等学校</td>
+                                <td class="p-3">〒618-8502 大阪府三島郡島本町若山台一丁目一番一号</td>
+                                <td class="p-3">JR島本駅まで電車 (約3分)、その後バス (約10分)。<br>合計: 約15～20分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">金光大阪高等学校</td>
+                                <td class="p-3">〒569-0002 大阪府高槻市東上牧1丁目3番1号</td>
+                                <td class="p-3">JR摂津富田駅まで電車 (約3分)、その後徒歩 (約15分) またはバス (約5分)。<br>合計: 約10～20分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大阪学院大学高等学校</td>
+                                <td class="p-3">〒564-0011 大阪府吹田市岸部南二丁目6-1</td>
+                                <td class="p-3">JR岸辺駅まで電車 (約15分)、その後徒歩 (約10分)。<br>合計: 約25分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">常翔学園高等学校</td>
+                                <td class="p-3">〒535-8585 大阪市旭区大宮5-16-1</td>
+                                <td class="p-3">JR大阪駅まで電車 (約20分)、その後バス (約10分) または地下鉄 (約10分)。<br>合計: 約40分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">早稲田大阪高等学校</td>
+                                <td class="p-3">〒567-0051 大阪府茨木市宿久庄7丁目20-1</td>
+                                <td class="p-3">JR茨木駅まで電車 (約5分)、その後バス (約15分)。<br>合計: 約25分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">京都橘高等学校</td>
+                                <td class="p-3">〒612-8026 京都府京都市伏見区桃山町伊賀50</td>
+                                <td class="p-3">JR京都駅まで電車 (約25分)、その後バス (約15分)。<br>合計: 約45分</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">龍谷大学付属平安高等学校</td>
+                                <td class="p-3">〒600-8267 京都府京都市下京区御器屋町30</td>
+                                <td class="p-3">JR京都駅まで電車 (約25分)、その後徒歩 (約10分) またはバス (約5分)。<br>合計: 約30～35分</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 p-4 bg-amber-100 border-l-4 border-amber-500 text-amber-800 rounded-lg">
+                    <p class="font-bold">注記：上記の情報は概算であり、時間帯や交通状況によって変動します。正確な情報や最新のアクセス方法は、各学校の公式ウェブサイトや交通機関の時刻表でご確認ください。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 出願の流れセクション -->
+        <section id="application-flow" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">出願の流れ</h2>
+                <p class="text-base md:text-lg mb-6">大阪府公立高校入試の出願は、主にインターネットを利用した電子出願システムを通じて行われます。正確な手順と期日を把握し、余裕を持って準備を進めることが重要です。</p>
+                <div class="mt-8 space-y-4">
+                    <div class="flow-chart-box p-4 rounded-lg text-center shadow">
+                        <span class="absolute -top-3 -left-3 bg-[#0077B6] text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">1</span>
+                        <p class="font-bold pt-2">インターネット出願サイトでの情報入力・登録</p>
+                        <p class="text-sm">受験生（または保護者）が、氏名、住所、中学校名、志望校、学科などの必要情報を入力し、写真をアップロードします。<br><strong class="text-gray-700">(目安: 12月下旬～1月下旬)</strong></p>
+                    </div>
+                    <div class="text-center text-3xl flow-chart-arrow">▼</div>
+                    <div class="flow-chart-box p-4 rounded-lg text-center shadow">
+                        <span class="absolute -top-3 -left-3 bg-[#0077B6] text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">2</span>
+                        <p class="font-bold pt-2">検定料の支払い</p>
+                        <p class="text-sm">指定された期間内に、オンライン決済（クレジットカード、コンビニ払いなど）で検定料を支払います。<br><strong class="text-gray-700">(目安: 1月下旬～2月上旬)</strong></p>
+                    </div>
+                    <div class="text-center text-3xl flow-chart-arrow">▼</div>
+                    <div class="flow-chart-box p-4 rounded-lg text-center shadow">
+                        <span class="absolute -top-3 -left-3 bg-[#0077B6] text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">3</span>
+                        <p class="font-bold pt-2">中学校での最終確認・承認</p>
+                        <p class="text-sm">入力された情報が中学校に送られ、中学校が調査書の内容などと照合し、最終的な承認を行います。<br><strong class="text-gray-700">(目安: 2月上旬)</strong></p>
+                    </div>
+                    <div class="text-center text-3xl flow-chart-arrow">▼</div>
+                    <div class="flow-chart-box p-4 rounded-lg text-center shadow">
+                        <span class="absolute -top-3 -left-3 bg-[#0077B6] text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">4</span>
+                        <p class="font-bold pt-2">受験票のダウンロード・印刷</p>
+                        <p class="text-sm">中学校の承認後、インターネット出願サイトから受験票をダウンロードし、印刷します。入試当日に必要となるため、大切に保管します。<br><strong class="text-gray-700">(目安: 2月中旬)</strong></p>
+                    </div>
+                </div>
+                <div class="mt-6 text-center p-4 bg-amber-100 border-l-4 border-amber-500 text-amber-800 rounded-lg">
+                    <p class="font-bold">注意：自己申告書や外部英語資格の証明書など、別途郵送が必要な書類がある場合は、期日までに必ず郵送してください。詳細は各選抜の要項で確認が必要です。<br>上記の日程は目安であり、年度によって変動します。必ず最新の入試要項をご確認ください。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2025年度 主要入試日程セクション -->
+        <section id="schedule" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">2025年度 主要入試日程</h2>
+                <p class="text-base md:text-lg mb-6">正確な日程管理は、受験指導の基本です。主要な日程を頭に入れ、生徒の学習計画をサポートしましょう。</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#0077B6] text-white">
+                                <th class="p-3 font-bold uppercase">選抜方式</th>
+                                <th class="p-3 font-bold uppercase">項目</th>
+                                <th class="p-3 font-bold uppercase">日程 (令和7年度)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E]" rowspan="3">特別入学者選抜</td>
+                                <td class="p-3">出願期間</td>
+                                <td class="p-3">2月14日(金)～2月17日(月)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3">学力検査</td>
+                                <td class="p-3">2月20日(木)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3">合格者発表</td>
+                                <td class="p-3">3月3日(月)</td>
+                            </tr>
+                             <tr class="bg-gray-100 hover:bg-gray-200">
+                                <td class="p-3 font-bold text-[#03045E]" rowspan="3">一般入学者選抜</td>
+                                <td class="p-3">出願期間</td>
+                                <td class="p-3">3月5日(水)～3月7日(金)</td>
+                            </tr>
+                            <tr class="bg-gray-100 hover:bg-gray-200">
+                                <td class="p-3">学力検査</td>
+                                <td class="p-3">3月12日(水)</td>
+                            </tr>
+                            <tr class="bg-gray-100 hover:hover:bg-gray-200">
+                                <td class="p-3">合格者発表</td>
+                                <td class="p-3">3月21日(金)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 五ツ木模試の概要とスケジュールセクション -->
+        <section id="itsuki-moshi" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">五ツ木模試の概要とスケジュール</h2>
+                <p class="text-base md:text-lg mb-6">五ツ木模試（五ツ木書房主催の「五ツ木・駸々堂中学・高校進学模擬テスト会」）は、大阪府下で最も多くの受験生が参加する公開模擬テストです。志望校の合格可能性判定に用いられ、受験生の学力状況を把握する上で非常に重要な指標となります。複数回実施されるため、定期的に受験して学力の推移を確認し、進路指導に役立てましょう。</p>
+                
+                <h3 class="text-xl font-bold text-[#03045E] mb-3 mt-6">五ツ木模試のポイント</h3>
+                <ul class="list-disc list-inside text-base space-y-2 mb-6">
+                    <li><strong class="font-semibold text-[#0077B6]">受験者数の多さ:</strong> 府内最大の規模を誇り、信頼性の高いデータが得られます。</li>
+                    <li><strong class="font-semibold text-[#0077B6]">志望校判定:</b> 詳細なデータに基づいた合格可能性判定は、志望校選びの強力な参考になります。</li>
+                    <li><strong class="font-semibold text-[#0077B6]">出題傾向の把握:</b> 大阪府の公立高校入試の出題傾向に合わせた問題形式で、実戦的な対策が可能です。</li>
+                    <li><strong class="font-semibold text-[#0077B6]">学力の定点観測:</strong> 定期的に受験することで、学力の伸びや苦手分野の変化を把握できます。特に夏以降のテストは重要です。</li>
                 </ul>
-                <p class="mt-6 text-md text-center font-semibold text-teal-800">合格への道のりは、最新の入試情報を常に確認し、自身の得意・不得意に合わせた戦略的な学習計画と、学校の選抜方式を深く理解した上での志望校選びが鍵となります。複雑な制度を乗り越え、最適な進路を選択するためには、必要に応じて専門家への個別相談も有効な手段となるでしょう。</p>
+
+                <h3 class="text-xl font-bold text-[#03045E] mb-3">2025年度 五ツ木模試 スケジュール</h3>
+                <p class="text-sm text-gray-600 mb-4">※以下は中学3年生対象の主要な回となります。正確な日程・会場は五ツ木書房の公式ウェブサイトで必ずご確認ください。</p>
+                <div class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#0077B6] text-white">
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">実施回</th>
+                                <th class="p-3 font-bold uppercase">開催日</th>
+                                <th class="p-3 font-bold uppercase">申込受付期間 (個人)</th>
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">個人成績表発送予定日</th>
+                                <th class="p-3 font-bold uppercase">特徴</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E]">第1回</td>
+                                <td class="p-3">5月18日(日)</td>
+                                <td class="p-3">5月8日(木)～5月13日(火)</td>
+                                <td class="p-3">5月29日(木)</td>
+                                <td class="p-3">新学年の定着度確認。</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E]">第2回</td>
+                                <td class="p-3">6月15日(日)</td>
+                                <td class="p-3">6月5日(木)～6月10日(火)</td>
+                                <td class="p-3">6月26日(木)</td>
+                                <td class="p-3">夏期講習前の現状把握。</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E]">第3回</td>
+                                <td class="p-3">7月13日(日)</td>
+                                <td class="p-3">7月3日(木)～7月8日(火)</td>
+                                <td class="p-3">7月25日(金)</td>
+                                <td class="p-3">主要教科の重要単元が出題され、秋からの学習計画に直結。</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E]">第4回</td>
+                                <td class="p-3">9月14日(日)</td>
+                                <td class="p-3">9月4日(木)～9月9日(火)</td>
+                                <td class="p-3">9月29日(月)</td>
+                                <td class="p-3">実戦的な問題が増え、受験校選定の重要な指標に。</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E]">第5回</td>
+                                <td class="p-3">10月12日(日)</td>
+                                <td class="p-3">10月2日(木)～10月7日(火)</td>
+                                <td class="p-3">10月27日(月)</td>
+                                <td class="p-3">受験生全体の学力レベルが最も拮抗する時期。</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E]">第6回</td>
+                                <td class="p-3">11月9日(日)</td>
+                                <td class="p-3">10月30日(木)～11月4日(火)</td>
+                                <td class="p-3">11月26日(水)</td>
+                                <td class="p-3">入試直前の最終確認。最後の判定材料となる。</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E]">第7回 (特別回)</td>
+                                <td class="p-3">12月14日(日)</td>
+                                <td class="p-3">12月4日(木)～12月9日(火)</td>
+                                <td class="p-3">12月25日(木)</td>
+                                <td class="p-3">特別回。</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E]">第8回 (直前回)</td>
+                                <td class="p-3">1月25日(日)</td>
+                                <td class="p-3">1月15日(木)～1月20日(火)</td>
+                                <td class="p-3">2月5日(木)</td>
+                                <td class="p-3">入試直前の最終調整。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 text-center p-4 bg-amber-100 border-l-4 border-amber-500 text-amber-800 rounded-lg">
+                    <p class="font-bold">指導ポイント：五ツ木模試の結果は、生徒の得意・苦手分野、志望校との距離を具体的に示す貴重なデータです。結果を分析し、個別指導に活かしましょう。特に中学3年生の後半は、複数回受験して推移を見ることが重要です。</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- よくある質問（FAQ）セクション -->
+        <section id="faq" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">よくある質問 (FAQ)</h2>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q1: 内申点と当日点の比重は毎年変わりますか？</h3>
+                        <p class="text-base">A1: いいえ、学力検査と調査書の比重タイプ（I～V型）は、例年7月頃に大阪府教育委員会から発表されますが、基本的な比重の構成（例：7:3や5:5など）は大きく変わらないことが多いです。ただし、特定の高校が比重タイプを変更する可能性はありますので、最新の入試要項を必ず確認してください。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q2: チャレンジテストの成績は、そのまま内申点に影響しますか？</h3>
+                        <p class="text-base">A2: チャレンジテストの個人の成績が直接内申点になるわけではありません。チャレンジテストは、各中学校が適切に評定を行っているかを確認するための「府内統一ルール」の資料として活用されます。学校全体の評定平均が府全体の平均から大きく外れていないかを検証するために使われます。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q3: 私立高校の特待生制度について教えてください。</h3>
+                        <p class="text-base">A3: 私立高校の特待生制度は、学力やスポーツなどの分野で優れた生徒を対象に、授業料の全額または一部を免除する制度です。学校によって基準や免除額が異なり、多くの場合、入試の成績や学年ごとの成績が基準となります。無償化制度と組み合わせることで、実質的に学費負担なく私立高校に通えるケースもあります。志望する私立高校の募集要項で詳細を確認し、積極的に活用を検討しましょう。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q4: 入試直前の効果的な勉強法は何ですか？</h3>
+                        <p class="text-base">A4: 直前対策としては、新しい問題集に手を出すよりも、これまで解いた問題の復習と苦手分野の克服に集中することが重要です。特に過去問を繰り返し解き、時間配分の感覚を掴みましょう。睡眠をしっかり取り、体調管理も忘れずに行ってください。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q5: 併願校はどのように選べば良いですか？</h3>
+                        <p class="text-base">A5: 併願校を選ぶ際は、まず公立高校の滑り止めとしての役割だけでなく、万が一公立が不合格だった場合に「通いたい」と思える学校を選ぶことが大切です。学校の雰囲気、カリキュラム、部活動、通学時間、学費などを総合的に検討し、オープンキャンパスや説明会に積極的に参加して情報収集しましょう。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q6: 試験当日に緊張して実力が出せない場合の対策はありますか？</h3>
+                        <p class="text-base">A6: 適度な緊張は集中力を高めますが、過度な緊張は禁物です。試験前に深呼吸をしたり、簡単なストレッチをしたりしてリラックスすることを試みましょう。また、試験当日は「これまで頑張ってきた自分を信じる」という強い気持ちを持つことが大切です。普段から模試などを通じて本番慣れすることも有効です。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q7: 模擬試験の結果が思わしくない場合、どうすれば良いですか？</h3>
+                        <p class="text-base">A7: 模擬試験は弱点を見つけるための重要なツールです。結果が悪くても落ち込む必要はありません。重要なのは、どの科目、どの単元で点数を落としたのかを分析し、そこを重点的に復習することです。塾の先生や学校の先生に相談し、具体的な学習計画を立て直しましょう。諦めずに努力を続ければ、必ず結果はついてきます。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q8: 保護者は受験生にどのように接するべきですか？</h3>
+                        <p class="text-base">A8: 保護者は生徒の最大の理解者であり、サポート役です。過度な期待やプレッシャーを与えるのではなく、日々の努力を認め、精神的な支えとなることが重要です。健康管理（食事、睡眠）に気を配り、安心して勉強できる環境を整えましょう。また、定期的に学校や塾と連携し、生徒の状況を共有することも大切です。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q9: 推薦入試や特色選抜は一般入試と何が違いますか？</h3>
+                        <p class="text-base">A9: 推薦入試や特色選抜は、学力試験だけでなく、中学校での活動実績（部活動、生徒会、ボランティアなど）、面接、小論文、実技などを総合的に評価する入試方式です。一般入試よりも早い時期に行われることが多く、高校が求める特定の能力や適性を持つ生徒を募集します。公立高校では、特別入学者選抜がこれに当たります。自分の強みと高校のアドミッションポリシーが合致していれば、一般入試とは異なるチャンスを掴むことができます。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#03045E] mb-2">Q10: 公立高校と私立高校のどちらに進むべきか、迷っています。</h3>
+                        <p class="text-base">A10: これは多くの受験生が抱える悩みです。最終的な選択は、学力だけでなく、学校の教育方針、雰囲気、通学時間、学費、将来の目標など、様々な要素を考慮して決めるべきです。公立高校は学費が比較的安く、地域に根ざした教育が特徴です。一方、私立高校は多様なカリキュラムや手厚いサポート、充実した施設が魅力です。両者のメリット・デメリットを比較検討し、オープンキャンパスや学校説明会に複数参加して、自分に合った学校を見つけることが大切です。塾の先生や学校の先生、保護者ともよく話し合い、納得のいく選択をしてください。</p>
+                    </div>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-gray-800 text-white mt-16">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm">
-            <p>&copy; 2024 大阪府公立高校入試ガイド. All rights reserved.</p>
-            <p class="text-gray-400 mt-1">このサイトは情報提供を目的としており、最新かつ正確な情報は大阪府教育委員会の公式サイトでご確認ください。</p>
-        </div>
+    <!-- フッターセクション -->
+    <footer class="text-center p-6 bg-[#03045E] text-white mt-8">
+        <p>この資料が、皆様の指導の一助となることを願っています。</p>
+        <p class="text-sm mt-1 text-[#ADE8F4]">© 2025 </p>
     </footer>
 
+    <!-- Chart.jsとタブ切り替えのスクリプト -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const ratioData = {
-                'I': { values: [7, 3], label: 'Ⅰ型 (7:3)', text: '学力検査の比率が<span class="font-bold">7割</span>、調査書（内申点）の比率が<span class="font-bold">3割</span>です。当日の学力検査の結果が非常に重視されるタイプです。' },
-                'II': { values: [6, 4], label: 'Ⅱ型 (6:4)', text: '学力検査の比率が<span class="font-bold">6割</span>、調査書（内申点）の比率が<span class="font-bold">4割</span>です。学力検査がやや重視されます。' },
-                'III': { values: [5, 5], label: 'Ⅲ型 (5:5)', text: '学力検査の比率が<span class="font-bold">5割</span>、調査書（内申点）の比率が<span class="font-bold">5割</span>です。学力と内申点が均等に評価されます。' },
-                'IV': { values: [4, 6], label: 'Ⅳ型 (4:6)', text: '学力検査の比率が<span class="font-bold">4割</span>、調査書（内申点）の比率が<span class="font-bold">6割</span>です。日頃の学習成果がやや重視されます。' },
-                'V': { values: [3, 7], label: 'Ⅴ型 (3:7)', text: '学力検査の比率が<span class="font-bold">3割</span>、調査書（内申点）の比率が<span class="font-bold">7割</span>です。調査書（内申点）が非常に重視されるタイプです。' },
-            };
+        // 色の定義 (Vibrant Blues)
+        const vibrantBlues = {
+            primary: '#03045E',     // 濃いインディゴブルー
+            secondary: '#0077B6',    // ミディアムブルー
+            tertiary: '#00B4D8',     // ライトブルー
+            lightBlue: '#90E0EF',    // 非常に明るいブルー
+            lighterBlue: '#CAF0F8'   // ほぼ白に近いブルー
+        };
 
-            // 高度な高校データ (Report data integrated)
-            const highSchoolData = {
-                'owaHS': { name: '桜和高等学校', department: '教育文理学科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: 300, targetNaishinAvg: 3.3 },
-                'sakuramiyaHS': { name: '桜宮高等学校', department: '普通科スポーツ健康学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: 335, targetNaishinAvg: 3.7 },
-                'higashiHS': { name: '東高等学校', department: '普通科英語科理数科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (260 / 270) * 450, targetNaishinAvg: 4.8 }, // Convert 270-base to 450-base for consistency
-                'miyakojimaKogyoHS': { name: '都島工業高等学校', department: '工業科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: 330, targetNaishinAvg: 3.7 },
-                'nishinodaKokaHS': { name: '西野田工科高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null }, // Changed to null for N/A
-                'sakuyakonohanaHS': { name: '咲くやこの花高等学校', department: '総合学科演劇科食物文化科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: (295 / 360) * 450, targetNaishinAvg: 4.1 }, // Convert 360-base to 450-base
-                'otemaeHS': { name: '大手前高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
-                'minatoHS': { name: '港高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: 345, targetNaishinAvg: 3.8 },
-                'ichiokaHS': { name: '市岡高等学校', department: '普通科単位制', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (250 / 270) * 450, targetNaishinAvg: 4.6 }, // Convert 270-base to 450-base
-                'izumioKogyoHS': { name: '泉尾工業高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'taishohakuryoHS': { name: '大正白稜高等学校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'shimizudaniHS': { name: '清水谷高等学校', department: '普通科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (260 / 270) * 450, targetNaishinAvg: 4.8 }, // Convert 270-base to 450-base
-                'yuhigaokaHS': { name: '夕陽丘高等学校', department: '普通科音楽科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: (245 / 270) * 450, targetNaishinAvg: 4.5 }, // Convert 270-base to 450-base
-                'kozuHS': { name: '高津高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'kitanoHS': { name: '北野高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
-                'tennojiHS': { name: '天王寺高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
-                'mikunigaokaHS': { name: '三国丘高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: (265 / 270) * 450, targetNaishinAvg: 4.9 }, // Convert 270-base to 450-base
-                'tsurumishogyoHS': { name: '鶴見商業高等学校', department: '商業科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'IV', targetNaishinScore: null, targetNaishinAvg: null },
-                'sumiyoshishogyoHS': { name: '住吉商業高等学校', department: '商業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'IV', targetNaishinScore: null, targetNaishinAvg: null },
-                'osakaBusinessFrontierHS': { name: '大阪ビジネスフロンティア高等学校', department: 'グローバルビジネス科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'imamiyaHS': { name: '今宮高等学校', department: '総合学科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'yodoShogyoHS': { name: '淀商業高等学校', department: '商業科福祉ボランティア科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'higashiyodogawaHS': { name: '東淀川高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'higashiyodoKogyoHS': { name: '東淀工業高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'shibajimaHS': { name: '柴島高等学校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'yodogawaSeiryuHS': { name: '淀川清流高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'osakaWakabaHS': { name: '大阪わかば高等学校', department: '普通科（多部制単位制Ⅰ・Ⅱ部）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'ikunoKogyoHS': { name: '生野工業高等学校', department: '工業科', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'asahiHS': { name: '旭高等学校', department: '普通科国際文化科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'yodogawaKokaHS': { name: '淀川工科高等学校', department: '工業科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'seijoHS': { name: '成城高等学校', department: 'エンパワメントスクール', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'hanaiHS': { name: '汎愛高等学校', department: '普通科体育科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'abenoHS': { name: '阿倍野高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'kogeiHS': { name: '工芸高等学校', department: '工業科美術科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'sumiyoshiHS': { name: '住吉高等学校', department: '国際文化科総合科学科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'konanzokeiHS': { name: '港南造形高等学校', department: '総合造形科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'suitokokusaiHS': { name: '水都国際高等学校', department: 'グローバル探究科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'hannanHS': { name: '阪南高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'kyoikuCenterFuzokuHS': { name: '教育センター附属高等学校', department: '普通科 (単位制)', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'higashisumiyoshiHS': { name: '東住吉高等学校', department: '普通科芸能文化科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'higashisumiyoshiSogoHS': { name: '東住吉総合高等学校', department: '総合学科（クリエイティブスクール）', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'nagayoshiHS': { name: '長吉高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'imamiyaKokaHS': { name: '今宮工科高等学校', department: '工業科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'nishinariHS': { name: '西成高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'sakurazukaHS': { name: '桜塚高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'toyoshimaHS': { name: '豊島高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'tonoyamaHS': { name: '刀根山高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'toyonakaHS': { name: '豊中高等学校', department: '文理学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'senriSeiunHS': { name: '千里青雲高等学校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'ikedaHS': { name: '池田高等学校', department: '普通科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'shibuyaHS': { name: '渋谷高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'engeiHS': { name: '園芸高等学校', department: 'フラワーファクトリ科環境緑化科バイオサイエンス科', japaneseType: 'Ｂ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'IV', targetNaishinScore: null, targetNaishinAvg: null },
-                'minohHS': { name: '箕面高等学校', department: '普通科グローバル科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'minohHigashiHS': { name: '箕面東高等学校', department: '総合学科（エンパワメントスクール）', japaneseType: 'Ａ', mathType: 'Ａ', englishType: 'Ａ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'toyonakaNoseBunkouHS': { name: '豊中高等学校能勢分校', department: '総合学科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'kitasenriHS': { name: '北千里高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'suitaHS': { name: '吹田高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'suitaHigashiHS': { name: '吹田東高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'yamadaHS': { name: '山田高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'senriHS': { name: '千里高等学校', department: '国際文化科総合科学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'akutagawaHS': { name: '芥川高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'abunoHS': { name: '阿武野高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'ogawaraHS': { name: '大冠高等学校', department: '普通科', japaneseType: 'N/A', mathType: 'N/A', englishType: 'N/A', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null },
-                'kishiwadaHS': { name: '岸和田高等学校', department: '専門学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'ibarakiHS': { name: '茨木高等学校', department: '専門学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'shijonawateHS': { name: '四條畷高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'ikunoHS': { name: '生野高等学校', department: '専門学科', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'senyoHS': { name: '泉陽高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'tominbayashiHS': { name: '富田林高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'otoriHS': { name: '鳳高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｃ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'izumiHS': { name: '和泉高等学校', department: '普通科', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'sanoHS': { name: '佐野高等学校', department: 'N/A', japaneseType: 'Ｃ', mathType: 'Ｂ', englishType: 'Ｃ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'tomiokaHS': { name: '登美丘高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'sayamaHS': { name: '狭山高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'sakaiHigashiHS': { name: '堺東高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'kawachiHS': { name: '河南高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'kumedaHS': { name: '久米田高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'takaishiHS': { name: '高石高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'hinenoHS': { name: '日根野高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'kaizukaMinamiHS': { name: '貝塚南高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'kanakokaHS': { name: '金岡高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'naganoHS': { name: '長野高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'sakaiNishiHS': { name: '堺西高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'higashimozumoHS': { name: '東百舌鳥高等学校', department: 'N/A', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'I', targetNaishinScore: null, targetNaishinAvg: null },
-                'izumiotsuHS': { name: '泉大津高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'II', targetNaishinScore: null, targetNaishinAvg: null },
-                'kishiwadaShiritsuSangyoHS': { name: '岸和田市立産業高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'kongoHS': { name: '金剛高等学校', department: '普通科', japaneseType: 'Ｂ', mathType: 'Ｂ', englishType: 'Ｂ', ratioType: 'III', targetNaishinScore: null, targetNaishinAvg: null },
-                'neyagawaHS': { name: '寝屋川高等学校', department: '普通科', japaneseType: 'C', mathType: 'C', englishType: 'C', ratioType: 'I', targetNaishinScore: 4.7 * 90, targetNaishinAvg: 4.7 }, // Assuming 4.7 is average, converting to score
-                'makinoHS': { name: '牧野高等学校', department: '普通科', japaneseType: 'C', mathType: 'C', englishType: 'C', ratioType: 'I', targetNaishinScore: 4.5 * 90, targetNaishinAvg: 4.5 }, // Assuming 4.5 is average, converting to score
-                'hirakataHS': { name: '枚方高等学校', department: '普通科', japaneseType: 'B', mathType: 'B', englishType: 'B', ratioType: 'III', targetNaishinScore: 4.2 * 90, targetNaishinAvg: 4.2 }, // Assuming 4.2 is average, converting to score
-                'korigaokaHS': { name: '香里丘高等学校', department: '普通科', japaneseType: 'B', mathType: 'B', englishType: 'B', ratioType: 'I', targetNaishinScore: 3.9 * 90, targetNaishinAvg: 3.9 }, // Assuming 3.9 is average, converting to score
-                'ichiritsuHS': { name: 'いちりつ高等学校', department: '普通科専門学科', japaneseType: 'B', mathType: 'B', englishType: 'B', ratioType: 'I', targetNaishinScore: 4.4 * 90, targetNaishinAvg: 4.4 }, // Assuming 4.4 is average, converting to score
-                'chuoHS': { name: '中央高等学校', department: '普通科ビジネス科 (昼夜間単位制)', japaneseType: 'N/A', mathType: 'N/A', englishType: 'N/A', ratioType: 'N/A', targetNaishinScore: null, targetNaishinAvg: null }
-            };
-
-            let ratioChart, naishinChart;
-
-            function createRatioChart(ratioType) {
-                const ctx = document.getElementById('ratioChart').getContext('2d');
-                if (ratioChart) {
-                    ratioChart.destroy();
+        // 長いラベルを複数行に分割する関数 (Chart.jsのツールチップ用)
+        const wrapLabel = (label, maxLength = 16) => {
+            if (typeof label !== 'string' || label.length <= maxLength) {
+                return label;
+            }
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).trim().length > maxLength && currentLine.length > 0) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
                 }
-                ratioChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['学力検査', '調査書(内申点)'],
-                        datasets: [{
-                            data: ratioData[ratioType].values,
-                            backgroundColor: ['#0d9488', '#9ca3af'],
-                            borderColor: '#ffffff',
-                            borderWidth: 4,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed !== null) {
-                                            label += context.parsed * 10 + '%';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
+            }
+            if (currentLine.length > 0) {
+                lines.push(currentLine);
+            }
+            return lines;
+        };
+
+        // ツールチップのタイトルコールバック関数
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        // Chart.jsの共通オプション
+        const commonChartOptions = {
+            responsive: true,           // レスポンシブ対応
+            maintainAspectRatio: false, // アスペクト比を維持しない
+            plugins: {
+                legend: {
+                    labels: {
+                        color: vibrantBlues.primary, // 凡例のテキスト色
+                        font: {
+                            size: 14 // 凡例のフォントサイズ
                         }
                     }
-                });
-            }
-
-            function createNaishinChart(scores) {
-                const ctx = document.getElementById('naishinChart').getContext('2d');
-                if (naishinChart) {
-                    naishinChart.destroy();
+                },
+                tooltip: {
+                    enabled: true,                  // ツールチップを有効にする
+                    mode: 'index',                  // インデックスモード（同じX軸の全てのデータポイントを表示）
+                    intersect: false,               // マウスカーソルがデータポイントと交差していなくても表示
+                    backgroundColor: 'rgba(3, 4, 94, 0.9)', // ツールチップの背景色
+                    titleColor: '#FFFFFF',          // ツールチップのタイトル色
+                    bodyColor: '#FFFFFF',           // ツールチップの本文色
+                    borderColor: vibrantBlues.tertiary, // ツールチップのボーダー色
+                    borderWidth: 1,                 // ツールチップのボーダー幅
+                    callbacks: {
+                        title: tooltipTitleCallback // ツールチップのタイトルコールバック
+                    }
                 }
-                naishinChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['中学1年', '中学2年', '中学3年'],
-                        datasets: [{
-                            label: '内申点への貢献度',
-                            data: scores,
-                            backgroundColor: ['#9ca3af', '#9ca3af', '#ef4444'],
-                            borderRadius: 6,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                         scales: {
-                            x: {
-                                beginAtZero: true,
-                                max: 300
-                            }
+            },
+        };
+        
+        // 内申点チャートの描画
+        const naishinCtx = document.getElementById('naishinChart');
+        if (naishinCtx) {
+            new Chart(naishinCtx, {
+                type: 'doughnut', // ドーナツチャート
+                data: {
+                    labels: ['中学1年生', '中学2年生', '中学3年生'], // ラベル
+                    datasets: [{
+                        label: '内申点評定の比重', // データセットのラベル
+                        data: [2, 2, 6], // データ (比重を2:2:6に変更)
+                        backgroundColor: [ // 背景色
+                            vibrantBlues.lightBlue,
+                            vibrantBlues.tertiary,
+                            vibrantBlues.secondary
+                        ],
+                        borderColor: '#ffffff', // ボーダー色
+                        borderWidth: 4,       // ボーダー幅
+                        hoverOffset: 4        // ホバー時のオフセット
+                    }]
+                },
+                options: {
+                    ...commonChartOptions, // 共通オプションを適用
+                    plugins: {
+                       ...commonChartOptions.plugins,
+                       legend: {
+                           position: 'bottom', // 凡例の位置
+                           labels: {
+                               color: vibrantBlues.primary,
+                               font: { size: 14 }
+                           }
+                       },
+                       title: {
+                           display: true, // タイトル表示
+                           text: '内申点 学年別評価比重', // タイトルテキスト
+                           color: vibrantBlues.primary,
+                           font: { size: 16, weight: 'bold' }
+                       }
+                    }
+                }
+            });
+        }
+        
+        // 比重タイプチャートの描画
+        const weightTypeCtx = document.getElementById('weightTypeChart');
+        if (weightTypeCtx) {
+            new Chart(weightTypeCtx, {
+                type: 'bar', // 棒グラフ
+                data: {
+                    labels: ['Ⅰ(7:3)', 'Ⅱ(6:4)', 'Ⅲ(5:5)', 'Ⅳ(4:6)', 'Ⅴ(3:7)'], // ラベル
+                    datasets: [
+                        {
+                            label: '学力検査', // データセットのラベル
+                            data: [630, 540, 450, 360, 270], // データ
+                            backgroundColor: vibrantBlues.secondary, // 背景色
+                            borderColor: vibrantBlues.primary,    // ボーダー色
+                            borderWidth: 1                        // ボーダー幅
                         },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                             tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return ` ${context.raw}点`;
-                                    }
-                                }
-                            }
+                        {
+                            label: '調査書', // データセットのラベル
+                            data: [270, 360, 450, 540, 630], // データ
+                            backgroundColor: vibrantBlues.lightBlue, // 背景色
+                            borderColor: vibrantBlues.tertiary,    // ボーダー色
+                            borderWidth: 1                         // ボーダー幅
+                        }
+                    ]
+                },
+                options: {
+                    ...commonChartOptions, // 共通オプションを適用
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Y軸を0から開始
+                            stacked: false,    // スタックしない
+                            grid: { color: '#e0e0e0' }, // グリッド線の色
+                            ticks: { color: vibrantBlues.primary } // 目盛りのテキスト色
+                        },
+                        x: {
+                           grid: { display: false }, // グリッド線非表示
+                           ticks: { color: vibrantBlues.primary } // 目盛りのテキスト色
+                        }
+                    },
+                     plugins: {
+                        ...commonChartOptions.plugins,
+                        title: {
+                           display: false // タイトル非表示
+                        },
+                        legend: {
+                           position: 'bottom', // 凡例の位置
                         }
                     }
-                });
-            }
-            
-            const ratioButtons = document.querySelectorAll('.ratio-btn');
-            const ratioExplanation = document.getElementById('ratio-explanation');
-            
-            function updateRatioDisplay(ratioType) {
-                if (ratioType && ratioData[ratioType]) {
-                    createRatioChart(ratioType);
-                    const explanationData = ratioData[ratioType];
-                    ratioExplanation.innerHTML = `
-                        <h4 class="font-bold text-lg text-teal-800 mb-1">${explanationData.label}</h4>
-                        <p class="text-gray-700">${explanationData.text}</p>
-                    `;
-                } else {
-                    // Handle N/A or undefined ratioType
-                    if (ratioChart) {
-                        ratioChart.destroy(); // Destroy current chart if N/A
-                    }
-                    ratioExplanation.innerHTML = `
-                        <h4 class="font-bold text-lg text-teal-800 mb-1">情報なし</h4>
-                        <p class="text-gray-700">この学校の比率タイプは公開されていません。または情報がありません。</p>
-                    `;
                 }
-
-                ratioButtons.forEach(btn => {
-                    btn.classList.remove('active', 'bg-teal-600', 'text-white');
-                    btn.classList.add('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
-                });
-                const activeButton = document.querySelector(`.ratio-btn[data-ratio="${ratioType}"]`);
-                if (activeButton) {
-                    activeButton.classList.add('active', 'bg-teal-600', 'text-white');
-                    activeButton.classList.remove('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
-                }
-            }
-
-            ratioButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const ratioType = button.dataset.ratio;
-                    updateRatioDisplay(ratioType);
-                    document.getElementById('school-select').value = ''; // Reset school select when ratio button is clicked
-                    document.getElementById('selected-school-info').classList.add('hidden'); // Hide school info
-                    document.getElementById('naishin-comparison').classList.add('hidden'); // Hide comparison when school is unselected
-                });
             });
+        }
 
-            const schoolSelect = document.getElementById('school-select');
-            const schoolNameDisplay = document.getElementById('school-name-display');
-            const schoolDepartment = document.getElementById('school-department');
-            const schoolRatioType = document.getElementById('school-ratio-type');
-            const schoolJapaneseType = document.getElementById('school-japanese-type');
-            const schoolMathType = document.getElementById('school-math-type');
-            const schoolEnglishType = document.getElementById('school-english-type');
-            const schoolTargetNaishinAvg = document.getElementById('school-target-naishin-avg');
-            const schoolTargetNaishinScore = document.getElementById('school-target-naishin-score');
-            const selectedSchoolInfoDiv = document.getElementById('selected-school-info');
-            const naishinComparisonDiv = document.getElementById('naishin-comparison');
-            const naishinDifferenceTextEl = document.getElementById('naishin-difference-text');
-            const naishinDifferenceValueEl = document.getElementById('naishin-difference-value');
-
-
-            // Populate school select dropdown
-            for (const key in highSchoolData) {
-                const school = highSchoolData[key];
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = school.name + (school.department && school.department !== 'N/A' ? ' (' + school.department + ')' : ''); // Only add department if it's not empty/N/A
-                schoolSelect.appendChild(option);
-            }
-
-            schoolSelect.addEventListener('change', (event) => {
-                const selectedSchoolKey = event.target.value;
-                if (selectedSchoolKey && highSchoolData[selectedSchoolKey]) {
-                    const school = highSchoolData[selectedSchoolKey];
-                    
-                    schoolNameDisplay.textContent = school.name;
-                    schoolDepartment.textContent = school.department;
-                    schoolRatioType.textContent = school.ratioType + (school.ratioType !== 'N/A' ? '型' : '');
-                    schoolJapaneseType.textContent = school.japaneseType;
-                    schoolMathType.textContent = school.mathType;
-                    schoolEnglishType.textContent = school.englishType;
-
-                    // Display target naishin scores
-                    if (school.targetNaishinAvg !== null && school.targetNaishinAvg !== 'N/A') {
-                        schoolTargetNaishinAvg.textContent = school.targetNaishinAvg.toFixed(1);
-                        schoolTargetNaishinScore.textContent = Math.round(school.targetNaishinScore) + '点';
-                    } else {
-                        schoolTargetNaishinAvg.textContent = '情報なし';
-                        schoolTargetNaishinScore.textContent = '情報なし';
-                    }
-                    
-                    selectedSchoolInfoDiv.classList.remove('hidden'); // Show school info
-
-                    if (school.ratioType !== 'N/A') {
-                        updateRatioDisplay(school.ratioType); // Update ratio chart based on school's type
-                    } else {
-                        // If ratio data is N/A, remove active class from all ratio buttons and clear explanation
-                        ratioButtons.forEach(btn => {
-                            btn.classList.remove('active', 'bg-teal-600', 'text-white');
-                            btn.classList.add('bg-white', 'hover:bg-teal-50', 'border', 'border-gray-300');
-                        });
-                        if (ratioChart) {
-                            ratioChart.destroy();
+        const eikenCtx = document.getElementById('eikenChart');
+        if (eikenCtx) {
+            new Chart(eikenCtx, {
+                type: 'bar', // 棒グラフ
+                data: {
+                    labels: ['英検® 2級', ['英検® 準1級', '以上']], // ラベル (複数行ラベルも考慮)
+                    datasets: [{
+                        label: '保障点数 (一般選抜/90点満点)', // データセットのラベル
+                        data: [72, 90], // データ
+                        backgroundColor: [vibrantBlues.secondary, vibrantBlues.primary], // 背景色
+                        borderColor: [vibrantBlues.tertiary, vibrantBlues.secondary], // ボーダー色
+                        borderWidth: 2, // ボーダー幅
+                        barPercentage: 0.6, // 棒の幅
+                    }]
+                },
+                options: {
+                    ...commonChartOptions, // 共通オプションを適用
+                    indexAxis: 'y', // 横棒グラフ
+                     scales: {
+                        x: {
+                            beginAtZero: true, // X軸を0から開始
+                            max: 90,           // X軸の最大値
+                            grid: { color: '#e0e0e0' }, // グリッド線の色
+                            ticks: { color: vibrantBlues.primary } // 目盛りのテキスト色
+                        },
+                        y: {
+                           grid: { display: false }, // グリッド線非表示
+                           ticks: { color: vibrantBlues.primary, font: {size: 14} } // 目盛りのテキスト色とフォントサイズ
                         }
-                        ratioExplanation.innerHTML = `
-                            <h4 class="font-bold text-lg text-teal-800 mb-1">情報なし</h4>
-                            <p class="text-gray-700">この学校の比率タイプは公開されていません。または情報がありません。</p>
-                        `;
+                    },
+                    plugins: {
+                        ...commonChartOptions.plugins,
+                        legend: { display: false }, // 凡例非表示
+                        title: {
+                            display: true, // タイトル表示
+                            text: '英語資格による保障点 (一般選抜)', // タイトルテキスト
+                            color: vibrantBlues.primary,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        tooltip: {
+                           ...commonChartOptions.plugins.tooltip,
+                           callbacks: {
+                               title: tooltipTitleCallback, // ツールチップのタイトルコールバック
+                               label: function(context) {
+                                   let label = context.dataset.label || '';
+                                   if (label) {
+                                       label += ': ';
+                                   }
+                                   if (context.parsed.x !== null) {
+                                       label += context.parsed.x + '点保障'; // ツールチップのラベル表示
+                                   }
+                                   return label;
+                               }
+                           }
+                        }
                     }
-                    calculateNaishinDifference(); // Calculate and display difference when a school is selected
-
-                } else {
-                    selectedSchoolInfoDiv.classList.add('hidden'); // Hide school info if no school or default is selected
-                    naishinComparisonDiv.classList.add('hidden'); // Hide comparison when school is unselected
-                    // Revert to default ratio display if no school is selected
-                    updateRatioDisplay('I');
                 }
             });
+        }
 
-
-            const naishinInputs = document.querySelectorAll('#naishin-inputs input');
-            const naishinScoreEl = document.getElementById('naishin-score');
-            
-            function calculateNaishin() {
-                const y1 = parseFloat(document.getElementById('y1').value) || 0;
-                const y2 = parseFloat(document.getElementById('y2').value) || 0;
-                const y3 = parseFloat(document.getElementById('y3').value) || 0;
-
-                const score1 = y1 * 9 * 2;
-                const score2 = y2 * 9 * 2;
-                const score3 = y3 * 9 * 6;
-                const totalScore = score1 + score2 + score3;
-                
-                naishinScoreEl.textContent = `${Math.round(totalScore)} / 450点`;
-                createNaishinChart([Math.round(score1), Math.round(score2), Math.round(score3)]);
-
-                calculateNaishinDifference(); // Recalculate difference whenever inner score changes
+        // タブ切り替え機能
+        function openGrade(evt, gradeName) {
+            // すべてのタブコンテンツを非表示にする
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
             }
 
-            function calculateNaishinDifference() {
-                const selectedSchoolKey = schoolSelect.value;
-                const userNaishinScore = parseFloat(naishinScoreEl.textContent.split(' ')[0]);
-
-                if (selectedSchoolKey && highSchoolData[selectedSchoolKey] && highSchoolData[selectedSchoolKey].targetNaishinScore !== null && highSchoolData[selectedSchoolKey].targetNaishinScore !== 'N/A') {
-                    const targetScore = highSchoolData[selectedSchoolKey].targetNaishinScore;
-                    const difference = userNaishinScore - targetScore;
-
-                    naishinComparisonDiv.classList.remove('hidden');
-                    let differenceText = '';
-                    let textColorClass = '';
-
-                    if (difference >= 0) {
-                        naishinDifferenceTextEl.textContent = "目標の内申点を上回っています！素晴らしい！";
-                        differenceText = `+${Math.round(difference)}点`;
-                        textColorClass = 'text-green-700'; // Positive difference is good
-                    } else { // difference < 0
-                        const deficit_total_points = Math.abs(difference);
-                        // Assuming deficit must be made up in 3rd year 9 subjects
-                        const avg_5_point_increase_needed = deficit_total_points / (9 * 6); // 9 subjects, 6x weight for 3rd year
-                        
-                        naishinDifferenceTextEl.textContent = "目標の内申点まであと少し！";
-                        differenceText = `各科目平均+${avg_5_point_increase_needed.toFixed(1)}点を目指そう！`; // Displaying 5-point average needed
-                        textColorClass = 'text-red-700'; // Negative difference means below target
-                    }
-                    naishinDifferenceValueEl.className = `text-3xl font-bold ${textColorClass}`;
-                    naishinDifferenceValueEl.textContent = differenceText;
-                } else {
-                    naishinComparisonDiv.classList.add('hidden'); // Hide if no school selected or target data is N/A
-                }
+            // すべてのタブボタンから active クラスを削除する
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
             }
 
+            // 特定のタブコンテンツを表示し、ボタンを active にする
+            document.getElementById(gradeName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
 
-            naishinInputs.forEach(input => {
-                input.addEventListener('input', calculateNaishin);
-            });
-
-
-            const tabButtons = {
-                main: document.getElementById('tab-main'),
-                sub: document.getElementById('tab-sub'),
-                eiken: document.getElementById('tab-eiken'),
-            };
-
-            const tabContents = {
-                main: document.getElementById('tab-content-main'),
-                sub: document.getElementById('tab-content-sub'),
-                eiken: document.getElementById('tab-content-eiken'),
-            };
-
-            function switchTab(tabName) {
-                Object.values(tabButtons).forEach(btn => {
-                    btn.classList.remove('active', 'bg-teal-600', 'text-white');
-                    btn.classList.add('border-transparent', 'text-gray-500');
-                });
-                Object.values(tabContents).forEach(content => content.classList.add('hidden'));
-
-                tabButtons[tabName].classList.add('active', 'bg-teal-600', 'text-white');
-                tabButtons[tabName].classList.remove('border-transparent', 'text-gray-500');
-                tabContents[tabName].classList.remove('hidden');
-            }
-            
-            tabButtons.main.addEventListener('click', () => switchTab('main'));
-            tabButtons.sub.addEventListener('click', () => switchTab('sub'));
-            tabButtons.eiken.addEventListener('click', () => switchTab('eiken'));
-
-
-            updateRatioDisplay('I'); // Initialize with I type
-            calculateNaishin(); // Initial calculation and difference check
-            switchTab('main'); // Initialize academic test tab
+        // ページロード時に最初のタブをアクティブにする
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // 初期表示として中学1年生のタブをアクティブにする
+            document.querySelector('.tab-button').click();
         });
     </script>
 </body>
