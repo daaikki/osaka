@@ -122,19 +122,20 @@
         <p class="mt-2 text-lg text-[#CAF0F8]">ビジュアル解説</p>
         <!-- ナビゲーションメニュー -->
         <nav class="mt-4">
-            <ul class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm md:text-base">
+            <ul class="flex flex-wrap justify-center gap-2 md:gap-4 text-xs sm:text-sm md:text-base">
                 <li><a href="#overview" class="nav-link">全体像</a></li>
                 <li><a href="#naishin" class="nav-link">内申点</a></li>
                 <li><a href="#naishin-calculation" class="nav-link">内申点計算</a></li>
                 <li><a href="#test-types" class="nav-link">学力検査</a></li>
                 <li><a href="#school-data-list" class="nav-link">高槻エリア高校</a></li>
+                <li><a href="#school-locations" class="nav-link">高校所在地</a></li>
+                <li><a href="#ai-assistant" class="nav-link">進路AIアシスタント</a></li>
                 <li><a href="#exam-details" class="nav-link">問題対策</a></li>
                 <li><a href="#curriculum-overview" class="nav-link">単元概要</a></li>
-                <li><a href="#shiritsu" class="nav-link">私立併願</a></li>
-                <li><a href="#school-locations" class="nav-link">高校所在地</a></li>
                 <li><a href="#application-flow" class="nav-link">出願の流れ</a></li>
                 <li><a href="#schedule" class="nav-link">入試日程</a></li>
                 <li><a href="#itsuki-moshi" class="nav-link">五ツ木模試</a></li>
+                <li><a href="#shiritsu" class="nav-link">私立併願</a></li>
                 <li><a href="#faq" class="nav-link">FAQ</a></li>
             </ul>
         </nav>
@@ -245,17 +246,17 @@
                                         <td class="p-3">360点</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
-                                        <td class="p-3 font-bold text-[#03045E]">Ⅲ型</td>
+                                        <td class="p-3">Ⅲ型</td>
                                         <td class="p-3">5：5</td>
                                         <td class="p-3">450点</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50 bg-gray-100">
-                                        <td class="p-3 font-bold text-[#03045E]">Ⅳ型</td>
+                                        <td class="p-3">Ⅳ型</td>
                                         <td class="p-3">4：6</td>
                                         <td class="p-3">540点</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
-                                        <td class="p-3 font-bold text-[#03045E]">Ⅴ型</td>
+                                        <td class="p-3">Ⅴ型</td>
                                         <td class="p-3">3：7</td>
                                         <td class="p-3">630点</td>
                                     </tr>
@@ -363,11 +364,11 @@
                             </tr>
                             <tr class="hover:bg-gray-50 bg-gray-100">
                                 <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">大冠</td>
-                                <td class="p-3">A</td>
-                                <td class="p-3">A</td>
-                                <td class="p-3">A</td>
-                                <td class="p-3">情報なし</td>
-                                <td class="p-3">42-46</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">B</td>
+                                <td class="p-3">Ⅱ型 (6:4)</td>
+                                <td class="p-3">42</td>
                             </tr>
                             <tr class="hover:bg-gray-50">
                                 <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">阿武野</td>
@@ -391,463 +392,6 @@
             </div>
         </section>
         
-        <!-- 学力検査：各問題タイプ別対策の深掘りセクション -->
-        <section id="exam-details" class="mb-12 scroll-mt-[6.5rem]">
-            <div class="card p-6 md:p-8">
-                <h2 class="text-2xl font-bold section-title pb-2 mb-4">学力検査：各問題タイプ別対策の深掘り</h2>
-                <p class="text-base md:text-lg mb-6">国語・数学・英語の3教科で出題されるA・B・C問題は、それぞれ異なる難易度と出題傾向を持ちます。生徒の志望校の出題傾向を把握し、的確な対策を講じることが合格への鍵となります。また、理科・社会は共通問題が出題されます。</p>
-                <div class="overflow-x-auto rounded-lg shadow-md">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-[#0077B6] text-white">
-                                <th class="p-3 font-bold uppercase whitespace-nowrap">問題タイプ</th>
-                                <th class="p-3 font-bold uppercase">難易度</th>
-                                <th class="p-3 font-bold uppercase">出題傾向</th>
-                                <th class="p-3 font-bold uppercase">対策のポイント</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">A問題</td>
-                                <td class="p-3">基礎的</td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold">国語:</strong> 教科書レベルの基本的な文章理解、漢字・語句の知識。</li>
-                                        <li><strong class="font-semibold">数学:</strong> 教科書の基本例題、公式・計算方法の直接的な理解と適用。</li>
-                                        <li><strong class="font-semibold">英語:</strong> 教科書に準拠した基礎的な単語・文法、短い英文の読解。リスニングも基礎的。</li>
-                                    </ul>
-                                </td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold text-[#0077B6]">基礎の徹底:</strong> 各教科の基本事項を確実に定着させる。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">ケアレスミス防止:</b> 計算や読み間違いなど、凡ミスをなくすための反復練習。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">時間配分:</b> 基礎問題で時間をかけすぎない練習。</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 bg-gray-100">
-                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">B問題</td>
-                                <td class="p-3">標準的</td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold">国語:</strong> A問題よりやや長文化・複雑化した文章読解。記述問題や作文の比重も増加。</li>
-                                        <li><strong class="font-semibold">数学:</b> 基本の組み合わせや応用を問う問題（関数、図形、確率）。ひねりのある問題も出題。</li>
-                                        <li><strong class="font-semibold">英語:</b> 単語・文法の知識を前提とした中程度の長文読解（500～600語程度）。内容理解だけでなく、推測力も問われる。</li>
-                                    </ul>
-                                </td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold text-[#0077B6]">応用力養成:</b> 基礎知識を組み合わせて問題を解く練習。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">過去問演習:</b> 実際の出題形式に慣れ、時間内で解ききる力を養う。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">記述・作文対策:</b> 自分の考えを論理的にまとめる練習。</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">C問題</td>
-                                <td class="p-3">発展的</td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold">国語:</strong> 評論文や現代文の長文が多く、難解な語句も登場。内容を深く理解し、論理的に記述する力が必要。</li>
-                                        <li><strong class="font-semibold">数学:</strong> 教科書レベルを大きく超える思考力・応用力を問う問題。複雑な図形問題や複数分野融合問題。</li>
-                                        <li><strong class="font-semibold">英語:</b> 問題文含め全て英語。非常に長い長文（800語以上）で、速読力・精読力・深い内容理解が必須。自由度が高い英作文も。</li>
-                                    </ul>
-                                </td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold text-[#0077B6]">専門的な対策:</strong> 塾でのC問題対策講座や難易度の高い問題集の活用。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">記述力強化:</b> 国語・英語の記述問題、英作文で高得点を目指すための添削指導。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">速読・多読:</b> 長文に慣れ、素早く正確に情報を読み取る練習。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">得点戦略:</b> 満点を目指すのではなく、取れる問題を確実に取る戦略が重要。</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 bg-gray-100">
-                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">理科 (共通問題)</td>
-                                <td class="p-3">標準的</td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold">教科書全般からの出題:</strong> 基礎知識の定着と応用力が問われる。</li>
-                                        <li><strong class="font-semibold">実験・観察に関する問題:</strong> 実験器具の名称や操作、結果の考察、グラフの読み取りなどが頻出。</li>
-                                        <li><strong class="font-semibold">計算問題:</strong> 物理・化学分野を中心に計算力を要する問題が出題される。</li>
-                                        <li><strong class="font-semibold">単元融合問題:</strong> 複数の単元知識を組み合わせた問題が見られる。</li>
-                                    </ul>
-                                </td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold text-[#0077B6]">用語の正確な暗記と理解:</strong> 基礎知識を確実に定着させる。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">実験の目的・方法・結果・考察の理解:</b> 教科書の実験や観察を深く理解し、考察力を養う。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">計算問題の反復練習:</strong> 特に苦手な分野の計算問題は徹底的に練習する。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">過去問演習:</b> 共通問題の形式に慣れ、図やグラフを用いた問題の読み取りと解答に慣れる。</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">社会 (共通問題)</td>
-                                <td class="p-3">標準的</td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold">地理・歴史・公民の各分野から満遍なく出題:</strong> 幅広い知識が求められる。</li>
-                                        <li><strong class="font-semibold">資料読み取り問題:</strong> 地図、グラフ、統計、年表などの資料を正確に読み取る問題が多い。</li>
-                                        <li><strong class="font-semibold">複数分野を横断した思考力:</strong> 歴史的背景と地理的要因を関連付けたり、公民の知識を時事問題に当てはめたりする問題。</li>
-                                        <li><strong class="font-semibold">時事問題との関連付け:</strong> 近年発生した出来事や社会問題と関連付けた出題が見られることがある。</li>
-                                    </ul>
-                                </td>
-                                <td class="p-3">
-                                    <ul class="list-disc list-inside text-sm">
-                                        <li><strong class="font-semibold text-[#0077B6]">基礎知識の定着:</strong> 各分野の重要用語や概念を正確に覚える。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">歴史の「流れ」の理解:</strong> 年号や出来事の暗記だけでなく、時代の背景や因果関係を理解する。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">地理の「関連性」の理解:</strong> 気候、地形、産業、文化などの地域ごとの関連性を理解する。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">公民の「仕組み」と「課題」の理解:</strong> 政治・経済・社会の仕組みと、現代社会の課題について深く理解する。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">資料問題演習:</strong> 資料から必要な情報を抽出し、分析する練習を徹底する。</li>
-                                        <li><strong class="font-semibold text-[#0077B6]">時事問題への関心:</strong> 日頃からニュースや新聞に触れ、社会の動きに関心を持つ。</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- 主要5科目 単元概要セクション -->
-        <section id="curriculum-overview" class="mb-12 scroll-mt-[6.5rem]">
-            <div class="card p-6 md:p-8">
-                <h2 class="text-2xl font-bold section-title pb-2 mb-4">主要5科目 単元概要</h2>
-                <p class="text-base md:text-lg mb-6">ここでは、中学校で学習する主要5科目（国語、数学、理科、社会、英語）の主要な単元を学年別にまとめています。各単元の内容と公立高校入試における重要度（★☆☆☆☆：低 〜 ★★★★★：高）を参考に、学習計画を立てましょう。</p>
-                
-                <div class="flex flex-wrap justify-center border-b border-gray-200 mb-4">
-                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade1')">中学1年生</button>
-                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade2')">中学2年生</button>
-                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade3')">中学3年生</button>
-                </div>
-
-                <!-- 中学1年生の単元内容 -->
-                <div id="grade1" class="tab-content">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学1年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>説明的文章の読解</strong>: 論理の把握、要点理解 (★★★☆☆)</li>
-                                <li><strong>文学的文章の読解</strong>: 登場人物の心情、表現技法 (★★★★☆)</li>
-                                <li><strong>漢字・語句</strong>: 読み書き、意味 (★★★★☆)</li>
-                                <li><strong>文法</strong>: 品詞、文の成分 (★★★☆☆)</li>
-                                <li><strong>作文</strong>: 構成、表現 (★★★☆☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学1年生)</h3>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>正の数・負の数</strong>: 加減乗除、四則計算、指数 (★★★★☆)</li>
-                                <li><strong>文字と式</strong>: 文字式の計算、式の値、数量の関係を式で表現 (★★★★☆)</li>
-                                <li><strong>方程式</strong>: 一次方程式の解き方、応用問題 (★★★★☆)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>比例と反比例</strong>: 概念、グラフ、式、活用 (★★★★☆)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>平面図形</strong>: 作図、対称移動、多角形 (★★★☆☆)</li>
-                                <li><strong>空間図形</strong>: 立体の見方、表面積、体積 (★★★☆☆)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>資料の活用</strong>: 度数分布表、ヒストグラム、代表値 (★★☆☆☆)</li>
-                            </ul>
-                        </div>
-                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学1年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>植物の生活と種類</strong>: 光合成、分類 (★★★☆☆)</li>
-                                <li><strong>身の回りの物質</strong>: 状態変化、密度、気体の性質 (★★★☆☆)</li>
-                                <li><strong>光・音・力</strong>: 光の屈折・反射、音の伝わり方、圧力 (★★★☆☆)</li>
-                                <li><strong>大地の変化</strong>: 地震、火山、岩石 (★★☆☆☆)</li>
-                                <li><strong>身近な生物の観察</strong>: 顕微鏡、スケッチ (★★☆☆☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学1年生)</h3>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>世界の様々な地域</strong>: 気候、地形、産業、文化 (★★★☆☆)</li>
-                                <li><strong>日本の様々な地域</strong>: 地形、産業、人口 (★★★☆☆)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>古代文明と日本</strong>: 旧石器～古墳時代 (★★☆☆☆)</li>
-                                <li><strong>飛鳥・奈良・平安時代</strong>: 律令国家、平安文化 (★★★☆☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学1年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>基本動詞</strong>: be動詞・一般動詞の現在形、過去形 (★★★★★)</li>
-                                <li><strong>文の種類</strong>: 肯定文・否定文・疑問文、命令文、There is/are (★★★★☆)</li>
-                                <li><strong>助動詞</strong>: can (能力・許可) (★★★★☆)</li>
-                                <li><strong>時制</strong>: 現在進行形 (★★★★☆)</li>
-                                <li><strong>基本語彙・表現</strong>: アルファベット、あいさつ、自己紹介、簡単な疑問詞 (★★★★☆)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 中学2年生の単元内容 -->
-                <div id="grade2" class="tab-content">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学2年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>説明的文章の読解</strong>: 筆者の主張、根拠 (★★★★☆)</li>
-                                <li><strong>文学的文章の読解</strong>: 情景描写、心情変化 (★★★★☆)</li>
-                                <li><strong>古典</strong>: 古文・漢文の基礎 (★★★☆☆)</li>
-                                <li><strong>漢字・語句</strong>: 読み書き、意味 (★★★★☆)</li>
-                                <li><strong>文法</strong>: 動詞・形容詞の活用、助動詞・助詞 (★★★☆☆)</li>
-                                <li><strong>作文</strong>: 意見文、構成 (★★★☆☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学2年生)</h3>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>式の計算</strong>: 多項式の加減乗除、分配法則、指数法則 (★★★★★)</li>
-                                <li><strong>連立方程式</strong>: 解き方（加減法・代入法）、応用問題 (★★★★★)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>一次関数</strong>: グラフ、変化の割合、式、応用問題 (★★★★★)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>図形の性質と合同</strong>: 平行線、多角形、合同条件、証明 (★★★★★)</li>
-                                <li><strong>平行と合同</strong>: 四角形の性質、中点連結定理 (★★★★☆)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>確率</strong>: 確率の求め方、場合の数、独立試行 (★★★★☆)</li>
-                                <li><strong>データの活用</strong>: 累積度数、箱ひげ図、四分位数 (★★☆☆☆)</li>
-                            </ul>
-                        </div>
-                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学2年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>化学変化と原子・分子</strong>: 物質の分解・化合、原子・分子、化学式、化学反応式 (★★★★☆)</li>
-                                <li><strong>電流と回路</strong>: オームの法則、電力、電磁誘導 (★★★★☆)</li>
-                                <li><strong>動物の生活と細胞</strong>: 消化、呼吸、循環、排出、細胞 (★★★☆☆)</li>
-                                <li><strong>気象</strong>: 気圧、風、雲、天気 (★★★☆☆)</li>
-                                <li><strong>地震と火山</strong>: 地震の揺れ、火山活動 (★★★☆☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学2年生)</h3>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>世界と日本の地域差</strong>: 産業構造、貿易、交通 (★★★★☆)</li>
-                                <li><strong>世界の諸問題</strong>: 環境問題、貧困、紛争 (★★★☆☆)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>中世の日本</strong>: 武士の時代、室町文化 (★★★★☆)</li>
-                                <li><strong>近世の日本</strong>: 江戸幕府、開国 (★★★★☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学2年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>比較</strong>: 比較級・最上級、as ~ as (★★★★★)</li>
-                                <li><strong>時制:</strong> 未来形 (be going to/will)、現在完了形 (継続・経験・完了) (★★★★★)</li>
-                                <li><strong>助動詞:</strong> must, should, have to, may, might, could (★★★★☆)</li>
-                                <li><strong>動詞の形:</strong> 不定詞 (名詞・形容詞・副詞的用法)、動名詞 (★★★★★)</li>
-                                <li><strong>受動態:</strong> be動詞 + 過去分詞、byを使った表現 (★★★★★)</li>
-                                <li><strong>接続詞:</strong> 時・条件・理由・目的を表す接続詞 (★★★★☆)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 中学3年生の単元内容 -->
-                <div id="grade3" class="tab-content">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学3年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>説明的文章の読解</strong>: 批評文、論説文、要約 (★★★★☆)</li>
-                                <li><strong>文学的文章の読解</strong>: 詩、短歌、俳句、小説 (★★★★☆)</li>
-                                <li><strong>古典</strong>: 古文・漢文の発展 (★★★★☆)</li>
-                                <li><strong>漢字・語句</strong>: 難易度高めの熟語、慣用句 (★★★★☆)</li>
-                                <li><strong>作文</strong>: 小論文、意見主張 (★★★★★)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学3年生)</h3>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>多項式</strong>: 乗法公式、因数分解 (★★★★★)</li>
-                                <li><strong>平方根</strong>: 計算、有理化、近似値 (★★★★★)</li>
-                                <li><strong>二次方程式</strong>: 解き方（解の公式、因数分解）、応用問題 (★★★★★)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>二次関数</strong>: $y=ax^2$のグラフ、変域、変化の割合、応用問題 (★★★★★)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>図形の相似</strong>: 相似条件、相似比、面積比、体積比、平行線と線分の比 (★★★★★)</li>
-                                <li><strong>円の性質</strong>: 円周角の定理、接線 (★★★★★)</li>
-                                <li><strong>三平方の定理</strong>: 辺の長さ、座標、空間図形への応用 (★★★★★)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>標本調査</strong>: 概念、無作為抽出 (★★★☆☆)</li>
-                            </ul>
-                        </div>
-                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学3年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>細胞と生殖</strong>: 細胞分裂、遺伝、生物の多様性 (★★★★☆)</li>
-                                <li><strong>力の働きと運動</strong>: 運動の法則、仕事、エネルギー保存 (★★★★☆)</li>
-                                <li><strong>化学変化とイオン</strong>: 酸・アルカリ、中和、電池、電気分解 (★★★★★)</li>
-                                <li><strong>地球と宇宙</strong>: 天体の動き、太陽系、恒星 (★★★★☆)</li>
-                                <li><strong>生命の連続性</strong>: 生態系、環境保全 (★★★☆☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学3年生)</h3>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>地理総合</strong>: 地域の特色、世界の諸地域（現代の課題と関連） (★★★★☆)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>近代の日本</strong>: 明治維新、帝国主義、日清・日露戦争 (★★★★★)</li>
-                                <li><strong>現代の日本と世界</strong>: 第一次・第二次世界大戦、戦後、国際社会 (★★★★★)</li>
-                            </ul>
-                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 公民</h4>
-                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                <li><strong>私たちと社会生活</strong>: 社会集団、きまり、規範 (★★☆☆☆)</li>
-                                <li><strong>日本の政治</strong>: 憲法、国会、内閣、裁判所 (★★★☆☆)</li>
-                                <li><strong>経済</strong>: 経済の仕組み、市場経済、財政 (★★★★☆)</li>
-                                <li><strong>国際社会</strong>: 国際連合、国際協力、地球市民 (★★★★☆)</li>
-                            </ul>
-                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学3年生)</h3>
-                            <ul class="list-disc list-inside text-sm space-y-1">
-                                <li><strong>修飾</strong>: 分詞の形容詞的用法、関係代名詞 (★★★★★)</li>
-                                <li><strong>複雑な文</strong>: 間接疑問文、現在完了進行形、仮定法 (★★★★★)</li>
-                                <li><strong>付加疑問文</strong>: 肯定文・否定文への付加疑問 (★★★★☆)</li>
-                                <li><strong>話法</strong>: 間接話法 (★★★★☆)</li>
-                                <li><strong>動詞の形:</strong> 原型不定詞、不定詞の応用 (too ~ to..., ~ enough to...) (★★★★☆)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- 追加リンク -->
-                <div class="mt-6 text-center">
-                    <p class="text-base text-gray-700">さらに詳しい科目情報はこちらで確認できます:</p>
-                    <a href="https://kyomujunior.netlify.app/" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mt-2">
-                        詳細な科目情報を見る
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 私立高校併願戦略のいまセクション -->
-        <section id="shiritsu" class="mb-12 scroll-mt-[6.5rem]">
-            <div class="card p-6 md:p-8">
-                 <h2 class="text-2xl font-bold section-title pb-2 mb-4">私立高校併願戦略のいま</h2>
-                 <p class="text-base md:text-lg mb-6">公立第一志望の生徒にとっても、私立高校の併願は常識です。近年は授業料無償化制度の拡充により、その位置づけが滑り止めから魅力的な選択肢へと変化しています。このトレンドを理解することが、的確な進路指導に繋がります。</p>
-                 
-                 <div class="p-4 mb-6 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-lg">
-                    <h3 class="font-bold text-xl mb-2">💡 私立高等学校等授業料無償化制度の影響</h3>
-                    <p class="text-base">大阪府では、国の制度に加え、独自の授業料支援制度を設けており、一定の所得要件を満たす世帯の生徒は、私立高校の授業料が実質無償となる場合があります。これにより、経済的な理由で私立高校を諦めていた生徒も、多様な選択肢を検討できるようになりました。特待生制度と組み合わせることで、さらに手厚い支援を受けられる場合もあります。</p>
-                 </div>
-
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="p-6 rounded-lg bg-gray-100">
-                        <h3 class="font-bold text-lg text-[#03045E]">受験戦略の変化</h3>
-                        <p class="mt-2">公立トップ校が無理なら、手厚い私立上位校へという安全志向が強まっています。これは、公立二番手校と私立上位校が競合するようになったことを意味します。</p>
-                        <div class="mt-4 text-3xl text-center">🤔 🆚 😄</div>
-                    </div>
-                    <div class="p-6 rounded-lg bg-gray-100">
-                        <h3 class="font-bold text-lg text-[#03045E]">私立高校の魅力</h3>
-                         <ul class="list-disc list-inside space-y-1 mt-2">
-                             <li>充実したICT教育・施設</li>
-                             <li>豊富な指定校推薦枠</li>
-                             <li>手厚い学習サポート</li>
-                             <li>魅力的な特待生制度</li>
-                             <li>多様なコース・カリキュラム</li>
-                         </ul>
-                    </div>
-                 </div>
-                 <div class="mt-6">
-                     <h3 class="text-xl font-bold text-[#03045E] mb-3 text-center section-title pb-2">高槻エリア主要私立高校 (併願参考)</h3>
-                     <p class="text-base mb-4 text-center">高槻エリアの生徒にとって併願先の選択肢となる主要な私立高校をいくつかご紹介します。<br>各高校の教育方針や進学実績を比較検討し、生徒のニーズに合った学校を見つけることが重要です。</p>
-                     <div class="grid grid-cols-1 gap-4">
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">関西大学高等部</h4>
-                             <p class="text-sm mt-1">関西大学への内部進学が強み。難関国公立大学を目指すコースも設置されています。<br><strong class="font-semibold">偏差値:</strong> 70前後</p>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">高槻高等学校</h4>
-                             <p class="text-sm mt-1">文武両道を掲げ、国公立・難関私立大学への高い進学実績を持つ進学校です。<br><strong class="font-semibold">偏差値:</strong> 70前後</p>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">大阪青凌高等学校</h4>
-                             <p class="text-sm mt-1">夢や目標、志望大学に応じた3つのコースを設置しています。</p>
-                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
-                                 <li><strong class="font-semibold">特進Sコース:</strong> 難関国公立大学の現役合格を目標とし、3年間5教科7科目のカリキュラムで指導。早期から応用力を鍛えるプログラムが充実。<strong class="font-semibold">(偏差値: 66)</strong></li>
-                                 <li><strong class="font-semibold">特進コース:</strong> 国公立大学・難関私立大学の現役合格を目標。1年次で基礎学力を強化し、2年次から文系・理系に細分化されたカリキュラムで実践力を養う.<strong class="font-semibold">(偏差値: 59)</strong></li>
-                                 <li><strong class="font-semibold">進学コース:</strong> 関関同立など有名私立大学の現役合格を目指す。2年次から文理に分かれ、3教科を中心に学習.<strong class="font-semibold">(偏差値: 49)</strong></li>
-                             </ul>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">金光大阪高等学校</h4>
-                             <p class="text-sm mt-1">着実にステップアップできる5つのコースを展開しています。</p>
-                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
-                                 <li><strong class="font-semibold">特進Iコース:</strong> 国公立・難関私立大学の現役合格を目標とする最上位コース。授業内容全てが受験対策につながるカリキュラム。<strong class="font-semibold">(偏差値: 58)</strong></li>
-                                 <li><strong class="font-semibold">特進IIコース:</b> 難関私立大学の現役合格を目標。2年次から文系3教科（国・英・社）の強化に注力し、志望校に応じた科目を選択.<strong class="font-semibold">(偏差値: 52)</strong></li>
-                                 <li><strong class="font-semibold">進学コース:</b> 有名私立大学の現役合格を目標。基礎学力の確立と、様々な大学入試スタイルに対応したカリキュラム.<strong class="font-semibold">(偏差値: 45)</strong></li>
-                                 <li><strong class="font-semibold">理系コース (2年次より):</strong> 理系科目に重点を置き、国公私立大学の理系学部への現役合格を目指す。</li>
-                                 <li><strong class="font-semibold">ロジカルスポーツコース（LSコース）(2年次より):</strong> 体育・スポーツに関する探究型授業を通し、社会で活かせる力を身につけながら有名私立大学への現役合格を目指す。</li>
-                             </ul>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">大阪学院大学高等学校 (吹田市)</h4>
-                             <p class="text-sm mt-1">様々な進路に対応したコースが充実しています。</p>
-                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
-                                 <li><strong class="font-semibold">特進コース:</strong> 難関大学を目指すコース。<strong class="font-semibold">(偏差値: 53)</strong></li>
-                                 <li><strong class="font-semibold">国際コース:</strong> 英語力強化と国際理解を深めるコース。<strong class="font-semibold">(偏差値: 50)</strong></li>
-                                 <li><strong class="font-semibold">普通コース:</strong> 幅広い進路に対応するコース。<strong class="font-semibold">(偏差値: 46)</strong></li>
-                                 <li><strong class="font-semibold">スポーツ科学コース:</strong> スポーツと学業の両立を目指すコース。<strong class="font-semibold">(偏差値: 46)</strong></li>
-                             </ul>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">常翔学園高等学校 (大阪市旭区)</h4>
-                             <p class="text-sm mt-1">理系・文系に特化した多様なコースを展開し、きめ細やかな指導が特徴です。</p>
-                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
-                                 <li><strong class="font-semibold">特進選抜コース:</strong> 難関国公立大学を目指すコース。<strong class="font-semibold">(偏差値: 60程度)</strong></li>
-                                 <li><strong class="font-semibold">特進コース:</strong> 国公立・難関私立大学を目指すコース.<strong class="font-semibold">(偏差値: 55程度)</strong></li>
-                                 <li><strong class="font-semibold">文理進学コース:</strong> 多様な進路に対応するコース。<strong class="font-semibold">(偏差値: 47-50程度)</strong></li>
-                             </ul>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">早稲田大阪高等学校 (茨木市)</h4>
-                             <p class="text-sm mt-1">早稲田大学への推薦枠を持つ点が大きな魅力の共学校です。</p>
-                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
-                                 <li><strong class="font-semibold">普通科 (Bコース):</strong> 早稲田大学への推薦入学制度を持つコース。<strong class="font-semibold">(偏差値: 55-58程度)</strong></li>
-                                 <li><strong class="font-semibold">普通科 (Aコース):</strong> 他大学進学を目指すコース。<strong class="font-semibold">(偏差値: 50-53程度)</strong></li>
-                             </ul>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">京都橘高等学校 (京都)</h4>
-                             <p class="text-sm mt-1">高槻からアクセスしやすく、多様なコースを持つ共学校です。特に「吹奏楽部」が有名で、全国レベルの活動を行っています。</p>
-                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
-                                 <li><strong class="font-semibold">国公立難関コース:</strong> 難関国公立大学を目指すコース。<strong class="font-semibold">(偏差値: 65-66)</strong></li>
-                                 <li><strong class="font-semibold">特別進学コース:</b> 関関同立など有名私立大学を目指すコース.<strong class="font-semibold">(偏差値: 56)</strong></li>
-                                 <li><strong class="font-semibold">総合進学コース:</b> 多様な進路に対応し、基礎学力を固めるコース。<strong class="font-semibold">(偏差値: 50-51)</strong></li>
-                             </ul>
-                         </div>
-                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
-                             <h4 class="font-bold text-[#03045E]">龍谷大学付属平安高等学校 (京都)</h4>
-                             <p class="text-sm mt-1">龍谷大学への内部進学制度が充実しており、スポーツも盛んな共学校です。特進コースでは難関大学への進学も目指せます。</p>
-                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
-                                 <li><strong class="font-semibold">選抜特進コース:</strong> 難関国公立・私立大学を目指すコース。<strong class="font-semibold">(偏差値: 61-62)</strong></li>
-                                 <li><strong class="font-semibold">プログレスコース:</strong> 龍谷大学進学を目指すコース.<strong class="font-semibold">(偏差値: 53-54)</strong></li>
-                                 <li><strong class="font-semibold">アスリートコース:</strong> スポーツ活動に力を入れながら、大学進学を目指すコース。<strong class="font-semibold">(偏差値: 42-43)</strong></li>
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="mt-6 text-center p-4 bg-[#CAF0F8] rounded-lg">
-                    <p class="font-bold text-[#03045E]">指導ポイント：単なる滑り止めではなく、生徒が通いたいと思える併願校を一緒に見つける視点も重要です。</p>
-                 </div>
-            </div>
-        </section>
-
         <!-- 高槻エリア主要高校の所在地情報セクション -->
         <section id="school-locations" class="mb-12 scroll-mt-[6.5rem]">
             <div class="card p-6 md:p-8">
@@ -955,6 +499,466 @@
                 </div>
                 <div class="mt-6 p-4 bg-amber-100 border-l-4 border-amber-500 text-amber-800 rounded-lg">
                     <p class="font-bold">注記：上記の情報は概算であり、時間帯や交通状況によって変動します。正確な情報や最新のアクセス方法は、各学校の公式ウェブサイトや交通機関の時刻表でご確認ください。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 進路指導AIアシスタントセクション (移動) -->
+        <section id="ai-assistant" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">進路指導AIアシスタント</h2>
+                <p class="text-base md:text-lg mb-6">あなたの希望に合わせて、AIがおすすめの高校を提案します。通学時間やその他の希望条件を入力してください。</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="travelTimeInput" class="block text-sm font-medium text-gray-700">希望の通学時間 (分以内):</label>
+                        <input type="number" id="travelTimeInput" class="mt-1 block w-full md:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-[#0077B6] focus:ring focus:ring-[#0077B6] focus:ring-opacity-50 p-2" placeholder="例: 30">
+                    </div>
+                    <div>
+                        <label for="otherConditionsInput" class="block text-sm font-medium text-gray-700">その他の希望条件 (複数入力可):</label>
+                        <textarea id="otherConditionsInput" class="mt-1 block w-full md:w-2/3 rounded-md border-gray-300 shadow-sm focus:border-[#0077B6] focus:ring focus:ring-[#0077B6] focus:ring-opacity=50 p-2 h-24" placeholder="例: 剣道部がある学校、女子が多い学校、理系に強い学校、新しい校舎、駅から近い、留学制度がある、指定校推薦が多い"></textarea>
+                    </div>
+                    <button id="generateGuidanceBtn" class="bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out" onclick="generateGuidance()">
+                        <span id="buttonText">アシスタントに相談</span>
+                        <span id="loadingSpinner" class="hidden ml-2">🔄</span>
+                    </button>
+                    <div id="guidanceOutput" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
+                        <p class="text-sm text-gray-600">AIからの提案をここに表示します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学力検査：各問題タイプ別対策の深掘りセクション -->
+        <section id="exam-details" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">学力検査：各問題タイプ別対策の深掘り</h2>
+                <p class="text-base md:text-lg mb-6">国語・数学・英語の3教科で出題されるA・B・C問題は、それぞれ異なる難易度と出題傾向を持ちます。生徒の志望校の出題傾向を把握し、的確な対策を講じることが合格への鍵となります。また、理科・社会は共通問題が出題されます。</p>
+                <div class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#0077B6] text-white">
+                                <th class="p-3 font-bold uppercase whitespace-nowrap">問題タイプ</th>
+                                <th class="p-3 font-bold uppercase">難易度</th>
+                                <th class="p-3 font-bold uppercase">出題傾向</th>
+                                <th class="p-3 font-bold uppercase">対策のポイント</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">A問題</td>
+                                <td class="p-3">基礎的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">国語:</strong> 教科書レベルの基本的な文章理解、漢字・語句の知識。</li>
+                                        <li><strong class="font-semibold">数学:</strong> 教科書の基本例題、公式・計算方法の直接的な理解と適用。</li>
+                                        <li><strong class="font-semibold">英語:</strong> 教科書に準拠した基礎的な単語・文法、短い英文の読解。リスニングも基礎的。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">基礎の徹底:</strong> 各教科の基本事項を確実に定着させる。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">ケアレスミス防止:</b> 計算や読み間違いなど、凡ミスをなくすための反復練習。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">時間配分:</b> 基礎問題で時間をかけすぎない練習。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">B問題</td>
+                                <td class="p-3">標準的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">国語:</strong> A問題よりやや長文化・複雑化した文章読解。記述問題や作文の比重も増加。</li>
+                                        <li><strong class="font-semibold">数学:</b> 基本の組み合わせや応用を問う問題（関数、図形、確率）。ひねりのある問題も出題。</li>
+                                        <li><strong class="font-semibold">英語:</b> 単語・文法の知識を前提とした中程度の長文読解（500～600語程度）。内容理解だけでなく、推測力も問われる。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">応用力養成:</b> 基礎知識を組み合わせて問題を解く練習。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">過去問演習:</b> 実際の出題形式に慣れ、時間内で解ききる力を養う。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">記述・作文対策:</b> 自分の考えを論理的にまとめる練習。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">C問題</td>
+                                <td class="p-3">発展的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">国語:</strong> 評論文や現代文の長文が多く、難解な語句も登場。内容を深く理解し、論理的に記述する力が必要。</li>
+                                        <li><strong class="font-semibold">数学:</strong> 教科書レベルを大きく超える思考力・応用力を問う問題。複雑な図形問題や複数分野融合問題。</li>
+                                        <li><strong class="font-semibold">英語:</b> 問題文含め全て英語。非常に長い長文（800語以上）で、速読力・精読力・深い内容理解が必須。自由度が高い英作文も。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">専門的な対策:</strong> 塾でのC問題対策講座や難易度の高い問題集の活用。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">記述力強化:</b> 国語・英語の記述問題、英作文で高得点を目指すための添削指導。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">速読・多読:</b> 長文に慣れ、素早く正確に情報を読み取る練習。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">得点戦略:</b> 満点を目指すのではなく、取れる問題を確実に取る戦略が重要。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 bg-gray-100">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">理科 (共通問題)</td>
+                                <td class="p-3">標準的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">教科書全般からの出題:</strong> 基礎知識の定着と応用力が問われる。</li>
+                                        <li><strong class="font-semibold">実験・観察に関する問題:</strong> 実験器具の名称や操作、結果の考察、グラフの読み取りなどが頻出。</li>
+                                        <li><strong class="font-semibold">計算問題:</strong> 物理・化学分野を中心に計算力を要する問題が出題される。</li>
+                                        <li><strong class="font-semibold">単元融合問題:</td>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">用語の正確な暗記と理解:</strong> 基礎知識を確実に定着させる。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">実験の目的・方法・結果・考察の理解:</strong> 教科書の実験や観察を深く理解し、考察力を養う。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">計算問題の反復練習:</strong> 特に苦手な分野の計算問題は徹底的に練習する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">過去問演習:</strong> 共通問題の形式に慣れ、図やグラフを用いた問題の読み取りと解答に慣れる。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 font-bold text-[#03045E] whitespace-nowrap">社会 (共通問題)</td>
+                                <td class="p-3">標準的</td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold">地理・歴史・公民の各分野から満遍なく出題:</strong> 幅広い知識が求められる。</li>
+                                        <li><strong class="font-semibold">資料読み取り問題:</strong> 地図、グラフ、統計、年表などの資料を正確に読み取る問題が多い。</li>
+                                        <li><strong class="font-semibold">複数分野を横断した思考力:</strong> 歴史的背景と地理的要因を関連付けたり、公民の知識を時事問題に当てはめたりする問題。</li>
+                                        <li><strong class="font-semibold">時事問題との関連付け:</strong> 近年発生した出来事や社会問題と関連付けた出題が見られることがある。</li>
+                                    </ul>
+                                </td>
+                                <td class="p-3">
+                                    <ul class="list-disc list-inside text-sm">
+                                        <li><strong class="font-semibold text-[#0077B6]">基礎知識の定着:</strong> 各分野の重要用語や概念を正確に覚える。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">歴史の「流れ」の理解:</strong> 年号や出来事の暗記だけでなく、時代の背景や因果関係を理解する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">地理の「関連性」の理解:</strong> 気候、地形、産業、文化などの地域ごとの関連性を理解する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">公民の「仕組み」と「課題」の理解:</strong> 政治・経済・社会の仕組みと、現代社会の課題について深く理解する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">資料問題演習:</strong> 資料から必要な情報を抽出し、分析する練習を徹底する。</li>
+                                        <li><strong class="font-semibold text-[#0077B6]">時事問題への関心:</strong> 日頃からニュースや新聞に触れ、社会の動きに関心を持つ。</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主要5科目 単元概要セクション -->
+        <section id="curriculum-overview" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold section-title pb-2 mb-4">主要5科目 単元概要</h2>
+                <p class="text-base md:text-lg mb-6">ここでは、中学校で学習する主要5科目（国語、数学、理科、社会、英語）の主要な単元を学年別にまとめています。各単元の内容と公立高校入試における重要度（★☆☆☆☆：低 〜 ★★★★★：高）を参考に、学習計画を立てましょう。</p>
+                
+                <div class="flex flex-wrap justify-center border-b border-gray-200 mb-4">
+                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade1')">中学1年生</button>
+                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade2')">中学2年生</button>
+                    <button class="tab-button py-2 px-4 text-lg focus:outline-none" onclick="openGrade(event, 'grade3')">中学3年生</button>
+                </div>
+
+                <!-- 中学1年生の単元内容 -->
+                <div id="grade1" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学1年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>説明的文章の読解</strong>: 論理の把握、要点理解 (★★★☆☆)</li>
+                                <li><strong>文学的文章の読解</strong>: 登場人物の心情、表現技法 (★★★★☆)</li>
+                                <li><strong>漢字・語句</strong>: 読み書き、意味 (★★★★☆)</li>
+                                <li><strong>文法</strong>: 品詞、文の成分 (★★★☆☆)</li>
+                                <li><strong>作文</strong>: 構成、表現 (★★★☆☆)</li>
+                            </ul>
+                            <button id="btn-kokugo-grade1" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('国語', '中学1年生', 'btn-kokugo-grade1', 'tips-kokugo-grade1')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-kokugo-grade1" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学1年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>正の数・負の数</strong>: 加減乗除、四則計算、指数 (★★★★☆)</li>
+                                <li><strong>文字と式</strong>: 文字式の計算、式の値、数量の関係を式で表現 (★★★★☆)</li>
+                                <li><strong>方程式</strong>: 一次方程式の解き方、応用問題 (★★★★☆)</li>
+                            </ul>
+                            <button id="btn-sugaku-grade1" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('数学', '中学1年生', 'btn-sugaku-grade1', 'tips-sugaku-grade1')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-sugaku-grade1" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>比例と反比例</strong>: 概念、グラフ、式、活用 (★★★★☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>平面図形</strong>: 作図、対称移動、多角形 (★★★☆☆)</li>
+                                <li><strong>空間図形</strong>: 立体の見方、表面積、体積 (★★★☆☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>資料の活用</strong>: 度数分布表、ヒストグラム、代表値 (★★☆☆☆)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学1年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>植物の生活と種類</strong>: 光合成、分類 (★★★☆☆)</li>
+                                <li><strong>身の回りの物質</strong>: 状態変化、密度、気体の性質 (★★★☆☆)</li>
+                                <li><strong>光・音・力</strong>: 光の屈折・反射、音の伝わり方、圧力 (★★★☆☆)</li>
+                                <li><strong>大地の変化</strong>: 地震、火山、岩石 (★★☆☆☆)</li>
+                                <li><strong>身近な生物の観察</strong>: 顕微鏡、スケッチ (★★☆☆☆)</li>
+                            </ul>
+                            <button id="btn-rika-grade1" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('理科', '中学1年生', 'btn-rika-grade1', 'tips-rika-grade1')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-rika-grade1" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学1年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>世界の様々な地域</strong>: 気候、地形、産業、文化 (★★★☆☆)</li>
+                                <li><strong>日本の様々な地域</strong>: 地形、産業、人口 (★★★☆☆)</li>
+                            </ul>
+                            <button id="btn-shakai-grade1" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('社会', '中学1年生', 'btn-shakai-grade1', 'tips-shakai-grade1')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-shakai-grade1" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>古代文明と日本</strong>: 旧石器～古墳時代 (★★☆☆☆)</li>
+                                <li><strong>飛鳥・奈良・平安時代</strong>: 律令国家、平安文化 (★★★☆☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学1年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>基本動詞</strong>: be動詞・一般動詞の現在形、過去形 (★★★★★)</li>
+                                <li><strong>文の種類</strong>: 肯定文・否定文・疑問文、命令文、There is/are (★★★★☆)</li>
+                                <li><strong>助動詞</strong>: can (能力・許可) (★★★★☆)</li>
+                                <li><strong>時制</strong>: 現在進行形 (★★★★☆)</li>
+                                <li><strong>基本語彙・表現</strong>: アルファベット、あいさつ、自己紹介、簡単な疑問詞 (★★★★☆)</li>
+                            </ul>
+                            <button id="btn-eigo-grade1" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('英語', '中学1年生', 'btn-eigo-grade1', 'tips-eigo-grade1')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-eigo-grade1" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中学2年生の単元内容 -->
+                <div id="grade2" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学2年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>説明的文章の読解</strong>: 筆者の主張、根拠 (★★★★☆)</li>
+                                <li><strong>文学的文章の読解</strong>: 情景描写、心情変化 (★★★★☆)</li>
+                                <li><strong>古典</strong>: 古文・漢文の基礎 (★★★☆☆)</li>
+                                <li><strong>漢字・語句</strong>: 読み書き、意味 (★★★★☆)</li>
+                                <li><strong>文法</strong>: 動詞・形容詞の活用、助動詞・助詞 (★★★☆☆)</li>
+                                <li><strong>作文</strong>: 意見文、構成 (★★★☆☆)</li>
+                            </ul>
+                            <button id="btn-kokugo-grade2" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('国語', '中学2年生', 'btn-kokugo-grade2', 'tips-kokugo-grade2')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-kokugo-grade2" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学2年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>式の計算</strong>: 多項式の加減乗除、分配法則、指数法則 (★★★★★)</li>
+                                <li><strong>連立方程式</strong>: 解き方（加減法・代入法）、応用問題 (★★★★★)</li>
+                            </ul>
+                            <button id="btn-sugaku-grade2" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('数学', '中学2年生', 'btn-sugaku-grade2', 'tips-sugaku-grade2')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-sugaku-grade2" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>一次関数</strong>: グラフ、変化の割合、式、応用問題 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>図形の性質と合同</strong>: 平行線、多角形、合同条件、証明 (★★★★★)</li>
+                                <li><strong>平行と合同</strong>: 四角形の性質、中点連結定理 (★★★★☆)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>確率</strong>: 確率の求め方、場合の数、独立試行 (★★★★☆)</li>
+                                <li><strong>データの活用</strong>: 累積度数、箱ひげ図、四分位数 (★★☆☆☆)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学2年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>化学変化と原子・分子</strong>: 物質の分解・化合、原子・分子、化学式、化学反応式 (★★★★☆)</li>
+                                <li><strong>電流と回路</strong>: オームの法則、電力、電磁誘導 (★★★★☆)</li>
+                                <li><strong>動物の生活と細胞</strong>: 消化、呼吸、循環、排出、細胞 (★★★☆☆)</li>
+                                <li><strong>気象</strong>: 気圧、風、雲、天気 (★★★☆☆)</li>
+                                <li><strong>地震と火山</strong>: 地震の揺れ、火山活動 (★★★☆☆)</li>
+                            </ul>
+                            <button id="btn-rika-grade2" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('理科', '中学2年生', 'btn-rika-grade2', 'tips-rika-grade2')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-rika-grade2" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学2年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>世界と日本の地域差</strong>: 産業構造、貿易、交通 (★★★★☆)</li>
+                                <li><strong>世界の諸問題</strong>: 環境問題、貧困、紛争 (★★★☆☆)</li>
+                            </ul>
+                            <button id="btn-shakai-grade2" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('社会', '中学2年生', 'btn-shakai-grade2', 'tips-shakai-grade2')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-shakai-grade2" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>中世の日本</strong>: 武士の時代、室町文化 (★★★★☆)</li>
+                                <li><strong>近世の日本</strong>: 江戸幕府、開国 (★★★★☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学2年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>比較</strong>: 比較級・最上級、as ~ as (★★★★★)</li>
+                                <li><strong>時制:</strong> 未来形 (be going to/will)、現在完了形 (継続・経験・完了) (★★★★★)</li>
+                                <li><strong>助動詞:</strong> must, should, have to, may, might, could (★★★★☆)</li>
+                                <li><strong>動詞の形:</strong> 不定詞 (名詞・形容詞・副詞的用法)、動名詞 (★★★★★)</li>
+                                <li><strong>受動態:</strong> be動詞 + 過去分詞、byを使った表現 (★★★★★)</li>
+                                <li><strong>接続詞:</strong> 時・条件・理由・目的を表す接続詞 (★★★★☆)</li>
+                            </ul>
+                            <button id="btn-eigo-grade2" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('英語', '中学2年生', 'btn-eigo-grade2', 'tips-eigo-grade2')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-eigo-grade2" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中学3年生の単元内容 -->
+                <div id="grade3" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">国語 (中学3年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>説明的文章の読解</strong>: 批評文、論説文、要約 (★★★★☆)</li>
+                                <li><strong>文学的文章の読解</strong>: 詩、短歌、俳句、小説 (★★★★☆)</li>
+                                <li><strong>古典</strong>: 古文・漢文の発展 (★★★★☆)</li>
+                                <li><strong>漢字・語句</strong>: 難易度高めの熟語、慣用句 (★★★★☆)</li>
+                                <li><strong>作文</strong>: 小論文、意見主張 (★★★★★)</li>
+                            </ul>
+                            <button id="btn-kokugo-grade3" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('国語', '中学3年生', 'btn-kokugo-grade3', 'tips-kokugo-grade3')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-kokugo-grade3" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">数学 (中学3年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 計算</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>多項式</strong>: 乗法公式、因数分解 (★★★★★)</li>
+                                <li><strong>平方根</strong>: 計算、有理化、近似値 (★★★★★)</li>
+                                <li><strong>二次方程式</strong>: 解き方（解の公式、因数分解）、応用問題 (★★★★★)</li>
+                            </ul>
+                            <button id="btn-sugaku-grade3" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('数学', '中学3年生', 'btn-sugaku-grade3', 'tips-sugaku-grade3')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-sugaku-grade3" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ グラフ</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>二次関数</strong>: $y=ax^2$のグラフ、変域、変化の割合、応用問題 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 図形</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>図形の相似</strong>: 相似条件、相似比、面積比、体積比、平行線と線分の比 (★★★★★)</li>
+                                <li><strong>円の性質</strong>: 円周角の定理、接線 (★★★★★)</li>
+                                <li><strong>三平方の定理</strong>: 辺の長さ、座標、空間図形への応用 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ その他</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>標本調査</strong>: 概念、無作為抽出 (★★★☆☆)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2">理科 (中学3年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>細胞と生殖</strong>: 細胞分裂、遺伝、生物の多様性 (★★★★☆)</li>
+                                <li><strong>力の働きと運動</strong>: 運動の法則、仕事、エネルギー保存 (★★★★☆)</li>
+                                <li><strong>化学変化とイオン</strong>: 酸・アルカリ、中和、電池、電気分解 (★★★★★)</li>
+                                <li><strong>地球と宇宙</strong>: 天体の動き、太陽系、恒星 (★★★★☆)</li>
+                                <li><strong>生命の連続性</strong>: 生態系、環境保全 (★★★☆☆)</li>
+                            </ul>
+                            <button id="btn-rika-grade3" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('理科', '中学3年生', 'btn-rika-grade3', 'tips-rika-grade3')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-rika-grade3" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">社会 (中学3年生)</h3>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 地理</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>地理総合</strong>: 地域の特色、世界の諸地域（現代の課題と関連） (★★★★☆)</li>
+                            </ul>
+                            <button id="btn-shakai-grade3" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('社会', '中学3年生', 'btn-shakai-grade3', 'tips-shakai-grade3')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-shakai-grade3" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 歴史</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>近代の日本</strong>: 明治維新、帝国主義、日清・日露戦争 (★★★★★)</li>
+                                <li><strong>現代の日本と世界</strong>: 第一次・第二次世界大戦、戦後、国際社会 (★★★★★)</li>
+                            </ul>
+                            <h4 class="font-semibold text-[#0077B6] mt-3">■ 公民</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                                <li><strong>私たちと社会生活</strong>: 社会集団、きまり、規範 (★★☆☆☆)</li>
+                                <li><strong>日本の政治</strong>: 憲法、国会、内閣、裁判所 (★★★☆☆)</li>
+                                <li><strong>経済</strong>: 経済の仕組み、市場経済、財政 (★★★★☆)</li>
+                                <li><strong>国際社会</strong>: 国際連合、国際協力、地球市民 (★★★★☆)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold text-[#03045E] mb-2 mt-4">英語 (中学3年生)</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>修飾</strong>: 分詞の形容詞的用法、関係代名詞 (★★★★★)</li>
+                                <li><strong>複雑な文</strong>: 間接疑問文、現在完了進行形、仮定法 (★★★★★)</li>
+                                <li><strong>付加疑問文</strong>: 肯定文・否定文への付加疑問 (★★★★☆)</li>
+                                <li><strong>話法</strong>: 間接話法 (★★★★☆)</li>
+                                <li><strong>動詞の形:</strong> 原型不定詞、不定詞の応用 (too ~ to..., ~ enough to...) (★★★★☆)</li>
+                            </ul>
+                            <button id="btn-eigo-grade3" class="mt-4 bg-[#00B4D8] hover:bg-[#0077B6] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-sm" onclick="generateStudyTips('英語', '中学3年生', 'btn-eigo-grade3', 'tips-eigo-grade3')">
+                                ✨ 合格へのヒント
+                            </button>
+                            <div id="tips-eigo-grade3" class="mt-4 p-3 bg-white border border-gray-200 rounded-lg hidden">
+                                <p class="text-sm text-gray-600">ヒントを生成中...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 追加リンク -->
+                <div class="mt-6 text-center">
+                    <p class="text-base text-gray-700">さらに詳しい科目情報はこちらで確認できます:</p>
+                    <a href="https://kyomujunior.netlify.app/" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mt-2">
+                        詳細な科目情報を見る
+                    </a>
                 </div>
             </div>
         </section>
@@ -1135,6 +1139,118 @@
             </div>
         </section>
 
+        <!-- 私立高校併願戦略のいまセクション -->
+        <section id="shiritsu" class="mb-12 scroll-mt-[6.5rem]">
+            <div class="card p-6 md:p-8">
+                 <h2 class="text-2xl font-bold section-title pb-2 mb-4">私立高校併願戦略のいま</h2>
+                 <p class="text-base md:text-lg mb-6">公立第一志望の生徒にとっても、私立高校の併願は常識です。近年は授業料無償化制度の拡充により、その位置づけが滑り止めから魅力的な選択肢へと変化しています。このトレンドを理解することが、的確な進路指導に繋がります。</p>
+                 
+                 <div class="p-4 mb-6 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-lg">
+                    <h3 class="font-bold text-xl mb-2">💡 私立高等学校等授業料無償化制度の影響</h3>
+                    <p class="text-base">大阪府では、国の制度に加え、独自の授業料支援制度を設けており、一定の所得要件を満たす世帯の生徒は、私立高校の授業料が実質無償となる場合があります。これにより、経済的な理由で私立高校を諦めていた生徒も、多様な選択肢を検討できるようになりました。特待生制度と組み合わせることで、さらに手厚い支援を受けられる場合もあります。</p>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-lg bg-gray-100">
+                        <h3 class="font-bold text-xl text-[#03045E]">受験戦略の変化</h3>
+                        <p class="mt-2">公立トップ校が無理なら、手厚い私立上位校へという安全志向が強まっています。これは、公立二番手校と私立上位校が競合するようになったことを意味します。</p>
+                        <div class="mt-4 text-3xl text-center">🤔 🆚 😄</div>
+                    </div>
+                    <div class="p-6 rounded-lg bg-gray-100">
+                        <h3 class="font-bold text-xl text-[#03045E]">私立高校の魅力</h3>
+                         <ul class="list-disc list-inside space-y-1 mt-2">
+                             <li>充実したICT教育・施設</li>
+                             <li>豊富な指定校推薦枠</li>
+                             <li>手厚い学習サポート</li>
+                             <li>魅力的な特待生制度</li>
+                             <li>多様なコース・カリキュラム</li>
+                         </ul>
+                    </div>
+                 </div>
+                 <div class="mt-6">
+                     <h3 class="text-xl font-bold text-[#03045E] mb-3 text-center section-title pb-2">高槻エリア主要私立高校 (併願参考)</h3>
+                     <p class="text-base mb-4 text-center">高槻エリアの生徒にとって併願先の選択肢となる主要な私立高校をいくつかご紹介します。<br>各高校の教育方針や進学実績を比較検討し、生徒のニーズに合った学校を見つけることが重要です。</p>
+                     <div class="grid grid-cols-1 gap-4">
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">関西大学高等部</h4>
+                             <p class="text-sm mt-1">関西大学への内部進学が強み。難関国公立大学を目指すコースも設置されています。<br><strong class="font-semibold">偏差値:</strong> 70前後</p>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">高槻高等学校</h4>
+                             <p class="text-sm mt-1">文武両道を掲げ、国公立・難関私立大学への高い進学実績を持つ進学校です。<br><strong class="font-semibold">偏差値:</strong> 70前後</p>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">大阪青凌高等学校</h4>
+                             <p class="text-sm mt-1">夢や目標、志望大学に応じた3つのコースを設置しています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進Sコース:</strong> 難関国公立大学の現役合格を目標とし、3年間5教科7科目のカリキュラムで指導。早期から応用力を鍛えるプログラムが充実。<strong class="font-semibold">(偏差値: 66)</strong></li>
+                                 <li><strong class="font-semibold">特進コース:</strong> 国公立大学・難関私立大学の現役合格を目標。1年次で基礎学力を強化し、2年次から文系・理系に細分化されたカリキュラムで実践力を養う.<strong class="font-semibold">(偏差値: 59)</strong></li>
+                                 <li><strong class="font-semibold">進学コース:</strong> 関関同立など有名私立大学の現役合格を目指す。2年次から文理に分かれ、3教科を中心に学習.<strong class="font-semibold">(偏差値: 49)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">金光大阪高等学校</h4>
+                             <p class="text-sm mt-1">着実にステップアップできる5つのコースを展開しています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進Iコース:</strong> 国公立・難関私立大学の現役合格を目標とする最上位コース。授業内容全てが受験対策につながるカリキュラム。<strong class="font-semibold">(偏差値: 58)</strong></li>
+                                 <li><strong class="font-semibold">特進IIコース:</b> 難関私立大学の現役合格を目標。2年次から文系3教科（国・英・社）の強化に注力し、志望校に応じた科目を選択.<strong class="font-semibold">(偏差値: 52)</strong></li>
+                                 <li><strong class="font-semibold">進学コース:</b> 有名私立大学の現役合格を目標。基礎学力の確立と、様々な大学入試スタイルに対応したカリキュラム.<strong class="font-semibold">(偏差値: 45)</strong></li>
+                                 <li><strong class="font-semibold">理系コース (2年次より):</strong> 理系科目に重点を置き、国公私立大学の理系学部への現役合格を目指す。</li>
+                                 <li><strong class="font-semibold">ロジカルスポーツコース（LSコース）(2年次より):</strong> 体育・スポーツに関する探究型授業を通し、社会で活かせる力を身につけながら有名私立大学への現役合格を目指す。</li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">大阪学院大学高等学校 (吹田市)</h4>
+                             <p class="text-sm mt-1">様々な進路に対応したコースが充実しています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進コース:</strong> 難関大学を目指すコース。<strong class="font-semibold">(偏差値: 53)</strong></li>
+                                 <li><strong class="font-semibold">国際コース:</strong> 英語力強化と国際理解を深めるコース。<strong class="font-semibold">(偏差値: 50)</strong></li>
+                                 <li><strong class="font-semibold">普通コース:</strong> 幅広い進路に対応するコース。<strong class="font-semibold">(偏差値: 46)</strong></li>
+                                 <li><strong class="font-semibold">スポーツ科学コース:</strong> スポーツと学業の両立を目指すコース。<strong class="font-semibold">(偏差値: 46)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">常翔学園高等学校 (大阪市旭区)</h4>
+                             <p class="text-sm mt-1">理系・文系に特化した多様なコースを展開し、きめ細やかな指導が特徴です。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">特進選抜コース:</strong> 難関国公立大学を目指すコース。<strong class="font-semibold">(偏差値: 60程度)</strong></li>
+                                 <li><strong class="font-semibold">特進コース:</strong> 国公立・難関私立大学を目指すコース.<strong class="font-semibold">(偏差値: 55程度)</strong></li>
+                                 <li><strong class="font-semibold">文理進学コース:</b> 多様な進路に対応するコース。<strong class="font-semibold">(偏差値: 47-50程度)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">早稲田大阪高等学校 (茨木市)</h4>
+                             <p class="text-sm mt-1">早稲田大学への推薦枠を持つ点が大きな魅力の共学校です。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">普通科 (Bコース):</strong> 早稲田大学への推薦入学制度を持つコース。<strong class="font-semibold">(偏差値: 55-58程度)</strong></li>
+                                 <li><strong class="font-semibold">普通科 (Aコース):</strong> 他大学進学を目指すコース。<strong class="font-semibold">(偏差値: 50-53程度)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">京都橘高等学校 (京都)</h4>
+                             <p class="text-sm mt-1">高槻からアクセスしやすく、多様なコースを持つ共学校です。特に「吹奏楽部」が有名で、全国レベルの活動を行っています。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">国公立難関コース:</strong> 難関国公立大学を目指すコース。<strong class="font-semibold">(偏差値: 65-66)</strong></li>
+                                 <li><strong class="font-semibold">特別進学コース:</b> 関関同立など有名私立大学を目指すコース.<strong class="font-semibold">(偏差値: 56)</strong></li>
+                                 <li><strong class="font-semibold">総合進学コース:</b> 多様な進路に対応し、基礎学力を固めるコース。<strong class="font-semibold">(偏差値: 50-51)</strong></li>
+                             </ul>
+                         </div>
+                         <div class="p-4 bg-blue-50 rounded-lg shadow-sm">
+                             <h4 class="font-bold text-[#03045E]">龍谷大学付属平安高等学校 (京都)</h4>
+                             <p class="text-sm mt-1">龍谷大学への内部進学制度が充実しており、スポーツも盛んな共学校です。特進コースでは難関大学への進学も目指せます。</p>
+                             <ul class="list-disc list-inside text-sm ml-4 mt-2">
+                                 <li><strong class="font-semibold">選抜特進コース:</strong> 難関国公立・私立大学を目指すコース。<strong class="font-semibold">(偏差値: 61-62)</strong></li>
+                                 <li><strong class="font-semibold">プログレスコース:</strong> 龍谷大学進学を目指すコース.<strong class="font-semibold">(偏差値: 53-54)</strong></li>
+                                 <li><strong class="font-semibold">アスリートコース:</strong> スポーツ活動に力を入れながら、大学進学を目指すコース。<strong class="font-semibold">(偏差値: 42-43)</strong></li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="mt-6 text-center p-4 bg-[#CAF0F8] rounded-lg">
+                    <p class="font-bold text-[#03045E]">指導ポイント：単なる滑り止めではなく、生徒が通いたいと思える併願校を一緒に見つける視点も重要です。</p>
+                 </div>
+            </div>
+        </section>
 
         <!-- よくある質問（FAQ）セクション -->
         <section id="faq" class="mb-12 scroll-mt-[6.5rem]">
@@ -1443,6 +1559,215 @@
             // 初期表示として中学1年生のタブをアクティブにする
             document.querySelector('.tab-button').click();
         });
+
+        /**
+         * Gemini APIを使用して学習ヒントを生成し、表示する関数
+         * @param {string} subject 科目名（例: '国語'）
+         * @param {string} grade 学年（例: '中学1年生'）
+         * @param {string} buttonId ボタンのHTML ID
+         * @param {string} tipsAreaId ヒント表示エリアのHTML ID
+         */
+        async function generateStudyTips(subject, grade, buttonId, tipsAreaId) {
+            const button = document.getElementById(buttonId);
+            const tipsArea = document.getElementById(tipsAreaId);
+
+            // ロード状態と表示エリアの初期化
+            button.disabled = true;
+            tipsArea.classList.remove('hidden');
+            tipsArea.innerHTML = '<p class="text-sm text-gray-600">ヒントを生成中...</p>';
+
+            try {
+                // プロンプトの作成
+                const prompt = `${grade}の${subject}の学習に役立つ、簡潔な学習ヒントを3つ、JSON形式の文字列配列で提供してください。`;
+                
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: { "type": "STRING" }
+                        }
+                    }
+                };
+
+                // ここにAPIキーを設定してください！
+                const apiKey = "AIzaSyAiMkjYpYFwy6WcX_wX9ElBqLMSfPbIr5o"; // <-- ここを置き換えてください！
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const tips = JSON.parse(jsonString);
+
+                    // ヒントの表示
+                    if (Array.isArray(tips) && tips.length > 0) {
+                        tipsArea.innerHTML = '<ul class="list-disc list-inside text-sm space-y-1">';
+                        tips.forEach(tip => {
+                            tipsArea.innerHTML += `<li>${tip}</li>`;
+                        });
+                        tipsArea.innerHTML += '</ul>';
+                    } else {
+                        tipsArea.innerHTML = '<p class="text-sm text-red-500">ヒントを生成できませんでした。もう一度お試しください。</p>';
+                    }
+                } else {
+                    tipsArea.innerHTML = '<p class="text-sm text-red-500">ヒントの生成に失敗しました。レスポンス形式が不正です。</p>';
+                }
+            } catch (error) {
+                console.error('Error generating study tips:', error);
+                tipsArea.innerHTML = `<p class="text-sm text-red-500">ヒントの生成中にエラーが発生しました: ${error.message}</p>`;
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        // 学校データ（AIアシスタント用）
+        const schoolData = [
+            { name: "大阪府立春日丘高等学校", type: "公立", travelTimeMinutes: 30, clubActivities: ["剣道部", "野球部", "サッカー部", "吹奏楽部", "ESS", "茶道部", "美術部", "軽音楽部", "テニス部", "陸上部", "水泳部"], features: ["進学校", "男女共学", "自習室", "国際交流"] },
+            { name: "大阪府立三島高等学校", type: "公立", travelTimeMinutes: 20, clubActivities: ["剣道部", "陸上部", "テニス部", "軽音楽部", "バスケットボール部", "バレーボール部", "吹奏楽部", "演劇部"], features: ["進学校", "男女共学", "部活動が盛ん", "地域連携"] },
+            { name: "大阪府立槻の木高等学校", type: "公立", travelTimeMinutes: 15, clubActivities: ["テニス部", "サッカー部", "吹奏楽部", "美術部", "ESS", "ダンス部", "水泳部"], features: ["単位制", "自由な校風", "男女共学", "駅から近い"] },
+            { name: "大阪府立高槻北高等学校", type: "公立", travelTimeMinutes: 25, clubActivities: ["野球部", "サッカー部", "バスケットボール部", "バレーボール部", "吹奏楽部", "美術部", "ESS"], features: ["文武両道", "男女共学", "落ち着いた環境"] },
+            { name: "大阪府立芥川高等学校", type: "公立", travelTimeMinutes: 20, clubActivities: ["サッカー部", "陸上部", "テニス部", "吹奏楽部", "演劇部", "茶道部"], features: ["男女共学", "面倒見が良い", "地域密着"] },
+            { name: "大阪府立大冠高等学校", type: "公立", travelTimeMinutes: 20, clubActivities: ["野球部", "サッカー部", "バスケットボール部", "バレーボール部", "軽音楽部", "美術部"], features: ["男女共学", "専門コースあり", "スポーツが盛ん"] },
+            { name: "大阪府立阿武野高等学校", type: "公立", travelTimeMinutes: 25, clubActivities: ["野球部", "サッカー部", "テニス部", "吹奏楽部", "ESS"], features: ["男女共学", "アットホームな雰囲気"] },
+            { name: "大阪府立島本高等学校", type: "公立", travelTimeMinutes: 25, clubActivities: ["剣道部", "野球部", "バスケットボール部", "吹奏楽部", "文芸部"], features: ["男女共学", "自然豊か", "少人数制"] },
+            { name: "関西大学高等部", type: "私立", travelTimeMinutes: 7, clubActivities: ["剣道部", "野球部", "サッカー部", "テニス部", "ESS", "吹奏楽部", "ロボット研究部"], features: ["大学連携", "男子校", "最先端施設", "指定校推薦"] },
+            { name: "高槻高等学校", type: "私立", travelTimeMinutes: 10, clubActivities: ["剣道部", "野球部", "サッカー部", "吹奏楽部", "ESS", "化学部", "物理部"], features: ["進学校", "男子校", "医歯薬系", "部活動が盛ん"] },
+            { name: "大阪青凌高等学校", type: "私立", travelTimeMinutes: 20, clubActivities: ["剣道部", "サッカー部", "バスケットボール部", "吹奏楽部", "美術部"], features: ["男女共学", "特進コース", "少人数教育", "駅から近い"] },
+            { name: "金光大阪高等学校", type: "私立", travelTimeMinutes: 20, clubActivities: ["野球部", "サッカー部", "テニス部", "吹奏楽部", "ESS", "ダンス部"], features: ["男女共学", "多様なコース", "スポーツ推薦", "施設充実"] },
+            { name: "大阪学院大学高等学校", type: "私立", travelTimeMinutes: 25, clubActivities: ["野球部", "サッカー部", "バスケットボール部", "吹奏楽部", "ESS"], features: ["大学連携", "男女共学", "国際教育"] },
+            { name: "常翔学園高等学校", type: "私立", travelTimeMinutes: 40, clubActivities: ["剣道部", "野球部", "サッカー部", "吹奏楽部", "ESS", "科学部"], features: ["大学連携", "男女共学", "理系に強い", "専門コース"] },
+            { name: "早稲田大阪高等学校", type: "私立", travelTimeMinutes: 25, clubActivities: ["野球部", "サッカー部", "テニス部", "吹奏楽部", "ESS"], features: ["大学連携", "男女共学", "難関私立"] },
+            { name: "京都橘高等学校", type: "私立", travelTimeMinutes: 45, clubActivities: ["吹奏楽部", "サッカー部", "バスケットボール部", "バレーボール部", "ESS"], features: ["男女共学", "部活動が盛ん", "立地が良い"] },
+            { name: "龍谷大学付属平安高等学校", type: "私立", travelTimeMinutes: 35, clubActivities: ["野球部", "サッカー部", "バスケットボール部", "吹奏楽部", "ESS", "茶道部"], features: ["大学連携", "男女共学", "スポーツ推薦", "伝統と実績"] },
+        ];
+
+
+        /**
+         * 進路指導AIアシスタント機能: ユーザーの入力に基づいて高校を推薦する
+         */
+        async function generateGuidance() {
+            const travelTimeInput = document.getElementById('travelTimeInput');
+            const otherConditionsInput = document.getElementById('otherConditionsInput');
+            const guidanceOutput = document.getElementById('guidanceOutput');
+            const generateGuidanceBtn = document.getElementById('generateGuidanceBtn');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            const travelTime = parseInt(travelTimeInput.value);
+            const otherConditions = otherConditionsInput.value.trim();
+
+            if (isNaN(travelTime) && otherConditions === '') {
+                guidanceOutput.classList.remove('hidden');
+                guidanceOutput.innerHTML = '<p class="text-sm text-red-500">通学時間かその他の希望条件のいずれかを入力してください。</p>';
+                return;
+            }
+
+            // ローディング状態の表示
+            generateGuidanceBtn.disabled = true;
+            buttonText.textContent = '生成中...';
+            loadingSpinner.classList.remove('hidden');
+            guidanceOutput.classList.remove('hidden');
+            guidanceOutput.innerHTML = '<p class="text-sm text-gray-600">AIがおすすめの高校を探しています...</p>';
+
+            try {
+                // プロンプトの作成
+                let prompt = `以下の高校データに基づいて、ユーザーの希望に合う高校を提案してください。`;
+                prompt += `提案は簡潔に、各高校の名前とおすすめ理由を2つ以上の文章で記述し、JSON形式の配列で提供してください。`;
+                prompt += `例: [{"schoolName": "高校A", "reason": "通学時間が短く、〇〇部があります。また、〇〇の教育に力を入れています。"}, ...]`;
+                prompt += `もし希望の部活動やその他の条件に関する情報がデータにない場合でも、通学時間内で、総合的な魅力や偏差値、または多様な部活動が期待できる学校を提案してください。`;
+                prompt += `高校データ: ${JSON.stringify(schoolData)}. `;
+                if (!isNaN(travelTime)) {
+                    prompt += `希望通学時間: ${travelTime}分以内。`;
+                }
+                if (otherConditions !== '') {
+                    prompt += `その他の希望条件: ${otherConditions}。`;
+                }
+                
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    "schoolName": { "type": "STRING" },
+                                    "reason": { "type": "STRING" }
+                                },
+                                required: ["schoolName", "reason"]
+                            }
+                        }
+                    }
+                };
+
+                // ここにAPIキーを設定してください！
+                const apiKey = "YOUR_API_KEY_HERE"; // <-- ここを置き換えてください！
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const recommendations = JSON.parse(jsonString);
+
+                    if (Array.isArray(recommendations) && recommendations.length > 0) {
+                        let outputHtml = '<h3 class="text-lg font-bold text-[#03045E] mb-2">おすすめの高校:</h3><ul class="list-disc list-inside space-y-2">';
+                        recommendations.forEach(school => {
+                            outputHtml += `<li><strong class="text-[#0077B6]">${school.schoolName}:</strong> ${school.reason}</li>`;
+                        });
+                        outputHtml += '</ul>';
+                        guidanceOutput.innerHTML = outputHtml;
+                    } else {
+                        guidanceOutput.innerHTML = '<p class="text-sm text-gray-600">ご希望に合う高校は見つかりませんでした。条件を調整して再度お試しください。</p>';
+                    }
+                } else {
+                    guidanceOutput.innerHTML = '<p class="text-sm text-red-500">AIアシスタントが応答できませんでした。後でもう一度お試しください。</p>';
+                }
+
+            } catch (error) {
+                console.error('Error generating guidance:', error);
+                guidanceOutput.innerHTML = `<p class="text-sm text-red-500">提案の生成中にエラーが発生しました: ${error.message}</p>`;
+            } finally {
+                // ローディング状態の解除
+                generateGuidanceBtn.disabled = false;
+                buttonText.textContent = 'アシスタントに相談';
+                loadingSpinner.classList.add('hidden');
+            }
+        }
     </script>
 </body>
 </html>
